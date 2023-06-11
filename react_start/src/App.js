@@ -3,6 +3,7 @@ import Nav from './nav_burger'
 import CenterBlock from './centerblock'
 import SideBar from './sidebar'
 import Bar from './bar'
+import Footer from './footer'
 
 function App() {
   return (
@@ -12,8 +13,9 @@ function App() {
           <Nav />
           <CenterBlock />
           <SideBar />
-          <Bar />
         </main>
+        <Bar />
+        <Footer />
       </div>
     </div>
   )
