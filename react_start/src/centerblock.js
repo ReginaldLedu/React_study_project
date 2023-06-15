@@ -1,6 +1,10 @@
 import Filter from './filter'
+
+/*function CenterBlock(){
+
+}*/
 function CenterBlock() {
-  return (
+return (
     <div className="main__centerblock centerblock">
       <div className="centerblock__search search">
         <svg className="search__svg">
