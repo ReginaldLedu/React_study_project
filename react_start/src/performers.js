@@ -14,3 +14,8 @@ export const genres = [
 	"Инди"
 ]
 
+export const years = [
+	"Более новые",
+	"Более старые"
+]
+
