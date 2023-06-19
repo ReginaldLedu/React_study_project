@@ -344,8 +344,11 @@ module.exports = function (webpackEnv) {
           enforce: 'pre',
           exclude: /@babel(?:\/|\\{1,2})runtime/,
           test: /\.(js|mjs|jsx|ts|tsx|css)$/,
-          loader: require.resolve('source-map-loader'),
-        },
+			loader: 
+			require.resolve('source-map-loader'),
+				
+			
+         },
         {
           // "oneOf" will traverse all following loaders until one will
           // match the requirements. When no loader matches it will fall

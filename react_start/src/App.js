@@ -1,4 +1,7 @@
-import './App.css'
+//import './App.css'
+
+//import styles from './css/style.css'
+//console.log(styles); 
 import Nav from './nav_burger'
 import CenterBlock from './centerblock'
 import SideBar from './sidebar'

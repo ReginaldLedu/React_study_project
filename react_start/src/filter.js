@@ -58,32 +58,32 @@ function YearMenu (){
 
 
 function Filter(){
-	const [activeIndex, setActiveIndex] = useState(false)
+	const [activeIndex, setActiveIndex] = useState(null)
 return(
 	<div className='centerblock__filter filter'>
 		<div className='filter__title'>Искать по:</div>
 		<FiltersShow
 		className="filter__button button-author _btn-text"
 		title="исполнителю"
-		isActive={activeIndex === true}
+		isActive={activeIndex === null}
 		onShow={()=>{
-			{setActiveIndex(!activeIndex)}}}
+			{setActiveIndex('performer')}}}
 			>
 		</FiltersShow>
 		<FiltersShow
 			className='filter__button button-year _btn-text'
 			title="году выпуска"
-			isActive={activeIndex === false}
+			isActive={activeIndex === null}
 			onShow={()=>{
-			{setActiveIndex(!activeIndex)}}}
+			{setActiveIndex('year')}}}
 			>
 			</FiltersShow>
 		<FiltersShow
 		className="filter__button button-genre _btn-text"
 		title="жанру"
-		isActive={activeIndex === false}
+		isActive={activeIndex === null}
 		onShow={()=>{
-			{setActiveIndex(!activeIndex)}}}
+			{setActiveIndex('genre')}}}
 		>	
 	</FiltersShow>
 	</div>

@@ -1,5 +1,7 @@
 import { useState } from 'react'
 import MenuNav from './menuNav'
+import styles from "./navBurger.module.css"
+console.log(styles)
 
 function Nav() {
   const menuState = useState(false)
@@ -9,14 +11,15 @@ function Nav() {
     menuHide(!menu)
   }
   return (
-    <nav className="main__nav nav">
-      <div className="nav__logo logo">
-        <img className="logo__image" src="img/logo.png" alt="logo"></img>
+    <nav className={styles.mainNav}>
+      <div className={styles.navLogo}>
+        <img className={styles.logoImage} src="img/logo.png" alt="logo"></img>
       </div>
-      <div className="nav__burger burger" onClick={toggleVisibility}>
-        <span className="burger__line"></span>
-        <span className="burger__line"></span>
-        <span className="burger__line"></span>
+      <div className={styles.navBurger}
+		onClick={toggleVisibility}>
+        <span className={styles.burgerLine}></span>
+        <span className={styles.burgerLine}></span>
+        <span className={styles.burgerLine}></span>
       </div>
       {menu && <MenuNav />}
     </nav>

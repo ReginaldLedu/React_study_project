@@ -100,11 +100,11 @@ body {
       -ms-flex-pack: justify;
           justify-content: space-between;
 }
-.main__nav {
+/*.main__nav {
   width: 244px;
   background-color: #181818;
   padding: 20px 0 20px 36px;
-}
+}*/
 .main__centerblock {
   width: auto;
   -webkit-box-flex: 3;
@@ -117,7 +117,7 @@ body {
   padding: 20px 90px 20px 78px;
 }
 
-.nav__logo {
+/*.nav__logo {
   width: 113.33px;
   height: 43px;
   padding: 13px 0 13px 0;
@@ -170,6 +170,7 @@ body {
   font-size: 16px;
   line-height: 24px;
 }
+*/
 
 .centerblock__search {
   width: 100%;
