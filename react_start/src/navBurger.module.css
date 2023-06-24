@@ -1,16 +1,16 @@
-.mainNav {
+.main__nav {
 	width: 244px;
 	background-color: #181818;
 	padding: 20px 0 20px 36px;
  }
- .navLogo {
+ .nav__logo {
 	width: 113.33px;
 	height: 43px;
 	padding: 13px 0 13px 0;
 	background-color: transparent;
 	margin-bottom: 20px;
  }
- .navBurger {
+ .nav__burger {
 	width: 20px;
 	height: 36px;
 	padding: 13px 0;
@@ -25,32 +25,32 @@
 		 -ms-flex-pack: justify;
 			  justify-content: space-between;
  }
- .navMenu {
+ .nav__menu {
 	display: block;
 	visibility: visible;
  }
  
- .logoImage {
+ .logo__image {
 	width: 113.33px;
 	height: 17px;
 	color: #181818;
  }
  
- .burgerLine {
+ .burger__line {
 	display: inline-block;
 	width: 100%;
 	height: 1px;
 	background-color: #d3d3d3;
  }
  
- .menuList {
+ .menu__list {
 	padding: 18px 0 10px 0;
  }
- .menuItem {
+ .menu__item {
 	padding: 5px 0;
 	margin-bottom: 16px;
  }
- .menuLink {
+ .menu__link {
 	color: #ffffff;
 	font-weight: 400;
 	font-size: 16px;

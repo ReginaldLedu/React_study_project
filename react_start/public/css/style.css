@@ -104,14 +104,14 @@ body {
   width: 244px;
   background-color: #181818;
   padding: 20px 0 20px 36px;
-}*/
+}
 .main__centerblock {
   width: auto;
   -webkit-box-flex: 3;
       -ms-flex-positive: 3;
           flex-grow: 3;
   padding: 20px 40px 20px 111px;
-}
+}*/
 .main__sidebar {
   max-width: 418px;
   padding: 20px 90px 20px 78px;
@@ -172,7 +172,7 @@ body {
 }
 */
 
-.centerblock__search {
+/*.centerblock__search {
   width: 100%;
   border-bottom: 1px solid #4e4e4e;
   margin-bottom: 51px;
@@ -277,7 +277,7 @@ body {
   font-weight: 400;
   font-size: 16px;
   line-height: 24px;
-}
+}*/
 
 .filter__title {
   font-style: normal;
@@ -335,7 +335,7 @@ body {
   text-align: left;
 }
 
-.content__title {
+/*.content__title {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -506,7 +506,7 @@ body {
   line-height: 24px;
   text-align: right;
   color: #696969;
-}
+}*/
 
 .sidebar__personal {
   display: -webkit-box;

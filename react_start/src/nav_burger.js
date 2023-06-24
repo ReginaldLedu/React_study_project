@@ -11,15 +11,15 @@ function Nav() {
     menuHide(!menu)
   }
   return (
-    <nav className={styles.mainNav}>
-      <div className={styles.navLogo}>
-        <img className={styles.logoImage} src="img/logo.png" alt="logo"></img>
+    <nav className={styles['main__nav']}>
+      <div className={styles['nav__logo']}>
+        <img className={styles['logo__image']} src="img/logo.png" alt="logo"></img>
       </div>
-      <div className={styles.navBurger}
+      <div className={styles['nav__burger']}
 		onClick={toggleVisibility}>
-        <span className={styles.burgerLine}></span>
-        <span className={styles.burgerLine}></span>
-        <span className={styles.burgerLine}></span>
+        <span className={styles['burger__line']}></span>
+        <span className={styles['burger__line']}></span>
+        <span className={styles['burger__line']}></span>
       </div>
       {menu && <MenuNav />}
     </nav>

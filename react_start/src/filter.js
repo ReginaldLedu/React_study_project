@@ -3,87 +3,58 @@ import { useState } from 'react'
 import { performers } from './performers.js'
 import { genres } from './performers.js'
 import { years } from './performers.js'
-
-/*function Filter(){
-	const [activeIndex, setActiveIndex] = useState(false)
-	function showMenu (){setActiveIndex((activeIndex))}
-	return(
-		<div className='centerblock__filter filter'
-		onClick={()=>{showMenu}}>
-			<div className='filter__title'>Искать по: </div>
-			<PerformerMenu></PerformerMenu>
-			<YearMenu></YearMenu>
-			<GenreMenu></GenreMenu>
-			</div>
-			)}
-
-function PerformerMenu (){
-	const [activeIndex, setActiveIndex] = useState(false)
-	function showPerformers (){setActiveIndex((!activeIndex))}
-	return (
-		<div className="filter__button button-author _btn-text"
-		title="исполнителю"
-		onClick={showPerformers}
-		>исполнителю
-		{activeIndex === false ? " " : List ("исполнителю")}
-		</div>
-	)
-}
-
-function GenreMenu (){
-	const [activeIndex, setActiveIndex] = useState(false)
-	function showGenres (){setActiveIndex((!activeIndex))}
-	return (
-		<div className="filter__button button-author _btn-text"
-		title="жанру"
-		onClick={showGenres}
-		>жанру
-		{activeIndex === false ? " " : List ("жанру")}
-		</div>
-	)
-}
-
-function YearMenu (){
-	const [activeIndex, setActiveIndex] = useState(false)
-	function showYears (){setActiveIndex((!activeIndex))}
-	return (
-		<div className="filter__button button-author _btn-text"
-		title="году выпуска"
-		onClick={showYears}
-		>году выпуска
-		{activeIndex === false ? " " : List ("году выпуска")}
-		</div>
-	)
-}*/
-
+import styles from "./filter.module.css"
 
 function Filter(){
 	const [activeIndex, setActiveIndex] = useState(null)
+	const [activeGenre, setActiveGenre] = useState(null)
+	const [activeYear, setActiveYear] = useState(null)
 return(
-	<div className='centerblock__filter filter'>
-		<div className='filter__title'>Искать по:</div>
+	<div className={styles['centerblock__filter']}>
+		<div className={styles['filter__title']}>Искать по:</div>
 		<FiltersShow
-		className="filter__button button-author _btn-text"
+		className={`${styles["filter__button"]} ${styles["button-author"]} ${styles["_btn-text"]}`}
 		title="исполнителю"
 		isActive={activeIndex === null}
 		onShow={()=>{
-			{setActiveIndex('performer')}}}
+			setActiveIndex("performer")
+			console.log(activeIndex)
+			activeIndex === "performer" ? 
+			setActiveIndex(null) : console.log(activeIndex) 
+			activeYear === "year" ? 
+			setActiveYear(null) : console.log(activeYear)
+			activeGenre === "genre" ? 
+			setActiveGenre(null) : console.log(activeGenre)
+			activeIndex === "performer" ? 
+			setActiveIndex(null) : console.log(activeIndex)} 
+			}
 			>
 		</FiltersShow>
 		<FiltersShow
-			className='filter__button button-year _btn-text'
+			className={`${styles["filter__button"]} ${styles["button-year"]} ${styles["_btn-text"]}`}
 			title="году выпуска"
-			isActive={activeIndex === null}
+			isActive={activeYear === null}
 			onShow={()=>{
-			{setActiveIndex('year')}}}
+			setActiveYear("year")
+			console.log(activeYear)
+			activeYear === "year" ? setActiveYear(null)  : console.log(activeYear)
+			activeGenre === "genre" ? setActiveGenre(null)  : console.log(activeGenre)
+			activeIndex === "performer" ? 
+			setActiveIndex(null) : console.log(activeIndex)}}
 			>
 			</FiltersShow>
 		<FiltersShow
-		className="filter__button button-genre _btn-text"
+		className={`${styles["filter__button"]} ${styles["button-genre"]} ${styles["_btn-text"]}`}
 		title="жанру"
-		isActive={activeIndex === null}
+		isActive={activeGenre === null}
 		onShow={()=>{
-			{setActiveIndex('genre')}}}
+			setActiveGenre("genre") 
+			console.log(activeGenre)
+			activeGenre === "genre" ? setActiveGenre(null)  : console.log(activeYear)	
+			activeYear === "year" ? setActiveYear(null)  : console.log(activeYear)
+			activeIndex === "performer" ? 
+			setActiveIndex(null) : console.log(activeIndex)
+			}}
 		>	
 	</FiltersShow>
 	</div>
@@ -93,10 +64,13 @@ return(
 function FiltersShow( {
 	/* eslint-disable */  title,
 	/* eslint-disable */  isActive,
-	/* eslint-disable */  onShow 
-}){ return(
-		<div className='filter__button button-author _btn-text' onClick={onShow}>{title}
-		{isActive ? " " : List (title)}</div>
+	/* eslint-disable */  onShow,
+}){
+	
+	return(
+		<div className={`${styles["filter__button"]} ${styles["_btn-text"]}`} onClick={onShow}> {title}
+		{isActive ? " ": List (title)}
+		</div>
 		)	
 }
 
@@ -104,7 +78,7 @@ function List (title){
 	const filters = ["исполнителю", "жанру", "году выпуска"]
 	if(title === filters[0]){
 		return (
-			<div className='filter__pop-up'>
+			<div className={styles["filter__pop-up"]}>
 			<p>{performers[0]} </p>
 			<p>{performers[1]}</p>
 			<p>{performers[2]}</p>
@@ -115,7 +89,7 @@ function List (title){
 	} else if (title === filters[1])
 	{
 		return (
-			<div className='filter__pop-up'>
+			<div className={styles["filter__pop-up"]}>
 			<p>{genres[0]} </p>
 			<p>{genres[1]}</p>
 			<p>{genres[2]}</p>
@@ -126,10 +100,20 @@ function List (title){
 	} 
 	else if (title === filters[2])
 	{
+		const [checked, setChecked] = useState(true);
+		function changeCheckbox() {
+			setChecked(!checked);
+		}
 		return (
-			<div className='filter__pop-up'>
-			<p>{years[0]} </p>
-			<p>{years[1]}</p>
+			<div className={styles["filter__pop-up-year"]}>
+			<label>
+			<input id="new" type="radio" checked={checked} onChange={changeCheckbox}></input>
+			{years[0]}</label>
+			<label>
+			<input id="old" type="radio" checked={!checked} onChange={changeCheckbox}></input>
+			{years[1]}</label>
+			
+
 			
 		</div>
 		)

@@ -1,19 +1,19 @@
 import styles from "./navBurger.module.css"
 function MenuNav() {
   return (
-    <div className={styles.navMenu}>
-      <ul className={styles.menuList}>
-        <li className={styles.menuItem}>
-          <a href="http://" className={styles.menuLink}>
+    <div className={styles['nav__menu']}>
+      <ul className={styles['menu__list']}>
+        <li className={styles['menu__item']}>
+          <a href="http://" className={styles['menu__link']}>
             Главное
           </a>
         </li>
-        <li className={styles.menuItem}>
-          <a href="http://" className={styles.menuLink}>
+        <li className={styles['menu__item']}>
+          <a href="http://" className={styles['menu__link']}>
             Мой плейлист
           </a>
         </li>
-        <li className={styles.menuItem}>Войти</li>
+        <li className={styles['menu__item']}>Войти</li>
       </ul>
     </div>
   )
