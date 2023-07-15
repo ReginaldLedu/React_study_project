@@ -1,24 +1,25 @@
- 
-import Nav from './nav_burger'
-import CenterBlock from './centerblock'
-import SideBar from './sidebar'
-import Bar from './bar'
-import Footer from './footer'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
 
+import Main from './main'
+import Login from './login'
+import Registration from './registration'
+import Favorites from './favorites'
+import NotFound from './notFound'
+import TracklistChosen from './trackListChosen'
 
 function App() {
   return (
-    <div className="wrapper">
-      <div className="container">
-        <main className="main">
-          <Nav />
-          <CenterBlock />
-          <SideBar />
-        </main>
-        <Bar />
-        <Footer />
-      </div>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Login />} />
+        <Route path="/main" element={<Main />} />
+        <Route path="/registration" element={<Registration />} />
+        <Route path="/favorites" element={<Favorites />} />
+
+        <Route path="/trackList/:id" element={<TracklistChosen />} />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </BrowserRouter>
   )
 }
 

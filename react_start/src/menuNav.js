@@ -1,19 +1,24 @@
-import styles from "./navBurger.module.css"
+import styles from './navBurger.module.css'
+import { NavLink } from 'react-router-dom'
 function MenuNav() {
   return (
     <div className={styles['nav__menu']}>
       <ul className={styles['menu__list']}>
         <li className={styles['menu__item']}>
-          <a href="http://" className={styles['menu__link']}>
+          <NavLink className={styles['menu__link']} to="/main">
             Главное
-          </a>
+          </NavLink>
         </li>
         <li className={styles['menu__item']}>
-          <a href="http://" className={styles['menu__link']}>
+          <NavLink className={styles['menu__link']} to="/favorites">
             Мой плейлист
-          </a>
+          </NavLink>
         </li>
-        <li className={styles['menu__item']}>Войти</li>
+        <li className={styles['menu__item']}>
+          <NavLink className={styles['menu__link']} to="/">
+            Выйти
+          </NavLink>
+        </li>
       </ul>
     </div>
   )

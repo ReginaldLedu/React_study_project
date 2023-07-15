@@ -1,9 +1,6 @@
 import Filter from './filter'
 import styles from "./centerblock.module.css"
 
-/*function CenterBlock(){
-
-}*/
 function CenterBlock() {
 return (
     <div className={styles['main__centerblock']}>
