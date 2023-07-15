@@ -1,36 +1,62 @@
 import styles from './bar.module.css'
-import { useRef, useState } from 'react'
+import { useRef, useState, useEffect } from 'react'
 
 function Bar() {
-  const [startPlay, setStartPlay] = useState(0)
+  const [startPlay, setStartPlay] = useState(false)
+  const [playProgress, setPlayProgress] = useState(null)
   const playRef = useRef(null)
   const progressRef = useRef(null)
+  const animationRef = useRef()
   const progressInsert = useRef(null)
   const play = () => {
     playRef.current.play()
-    const trackDuration = playRef.current.duration / 6000
-    const progressTimer = () => {
-      setInterval(() => {
-        const currentTime = playRef.current.currentTime
-        let part = (currentTime / trackDuration) * 100
-        progressRef.current.style.width = part
-        setStartPlay(part)
-        console.log(currentTime)
-        console.log(trackDuration)
-      }, 500)
-    }
-    progressTimer()
+    animationRef.current = requestAnimationFrame(whilePlaying)
+    progressRef.current.style.display = 'none'
+    setStartPlay(true)
+    let time = playRef.current.currentTime
+    setPlayProgress(time)
+    console.log(time)
   }
+  useEffect(() => {
+    const seconds = Math.floor(playRef.current.duration)
+    setPlayProgress(seconds)
+    console.log(playProgress)
+  })
+  const changeRange = () => {
+    playRef.current.currentTime = progressInsert.current.value
+    progressInsert.current.style.setProperty(
+      '--seek-before-width',
+      `${(progressInsert.current.value / playRef.current.duration) * 100}%`
+    )
+  }
+
+  const changePlayerCurrentTime = () => {
+    progressInsert.current.style.setProperty(
+      '--seek-before-width',
+      `${(progressInsert.current.value / playRef.current.duration) * 100}%`
+    )
+  }
+
+  const whilePlaying = () => {
+    progressInsert.current.value = playRef.current.currentTime
+    changePlayerCurrentTime()
+    animationRef.current = requestAnimationFrame(whilePlaying)
+  }
+
   return (
     <div className={styles['bar__content']}>
-      <div ref={progressRef} className={styles['bar__player-progress']}>
-        {startPlay && (
-          <div
-            ref={progressInsert}
-            style={{ background: 'purple', height: '100%' }}
-          ></div>
-        )}
-      </div>
+      {startPlay && (
+        <input
+          type="range"
+          defaultValue="0"
+          className={styles['bar__player-progress']}
+          name="range"
+          ref={progressInsert}
+          onChange={changeRange}
+          style={{ color: 'purple', height: '5px', width: '100%' }}
+        ></input>
+      )}
+      <div ref={progressRef} className={styles['bar__player-progress']}></div>
       <div className={styles['bar__player-block']}>
         <div className={styles['bar__player']}>
           <div className={styles['player__controls']}>
@@ -39,6 +65,17 @@ function Bar() {
                 <use xlinkHref="img/icon/sprite.svg#icon-prev"></use>
               </svg>
             </div>
+            {startPlay && (
+              <div
+                className={styles['player__btn-play']}
+                onClick={() => {
+                  playRef.current.pause()
+                  cancelAnimationFrame(animationRef.current)
+                }}
+              >
+                <img src="img/icon/stop.svg"></img>
+              </div>
+            )}
             <div className={styles['player__btn-play']} onClick={play}>
               <audio ref={playRef} src="track.mp3"></audio>
               <svg className={styles['player__btn-play-svg']}>
@@ -61,7 +98,7 @@ function Bar() {
               </svg>
             </div>
           </div>
-          <div className={styles['player__track-play track-play']}>
+          <div className={styles['player__track-play']}>
             <div className={styles['track-play__contain']}>
               <div className={styles['track-play__image']}>
                 <svg className={styles['track-play__svg']}>
