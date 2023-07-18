@@ -9,13 +9,19 @@ function Bar() {
   const animationRef = useRef()
   const progressInsert = useRef(null)
   const play = () => {
-    playRef.current.play()
-    animationRef.current = requestAnimationFrame(whilePlaying)
-    progressRef.current.style.display = 'none'
-    setStartPlay(true)
-    let time = playRef.current.currentTime
-    setPlayProgress(time)
-    console.log(time)
+    if (startPlay) {
+      playRef.current.pause()
+      cancelAnimationFrame(animationRef.current)
+      setStartPlay(false)
+      return
+    } else {
+      playRef.current.play()
+      animationRef.current = requestAnimationFrame(whilePlaying)
+      progressRef.current.style.display = 'none'
+      setStartPlay(true)
+      let time = playRef.current.currentTime
+      setPlayProgress(time)
+    }
   }
   useEffect(() => {
     const seconds = Math.floor(playRef.current.duration)
@@ -65,22 +71,15 @@ function Bar() {
                 <use xlinkHref="img/icon/sprite.svg#icon-prev"></use>
               </svg>
             </div>
-            {startPlay && (
-              <div
-                className={styles['player__btn-play']}
-                onClick={() => {
-                  playRef.current.pause()
-                  cancelAnimationFrame(animationRef.current)
-                }}
-              >
-                <img src="img/icon/stop.svg"></img>
-              </div>
-            )}
             <div className={styles['player__btn-play']} onClick={play}>
               <audio ref={playRef} src="track.mp3"></audio>
-              <svg className={styles['player__btn-play-svg']}>
-                <use xlinkHref="img/icon/sprite.svg#icon-play"></use>
-              </svg>
+              {startPlay ? (
+                <img src="img/icon/stop.svg"></img>
+              ) : (
+                <svg className={styles['player__btn-play-svg']}>
+                  <use xlinkHref="img/icon/sprite.svg#icon-play"></use>
+                </svg>
+              )}
             </div>
             <div className={styles['player__btn-next']}>
               <svg className={styles['player__btn-next-svg']}>
