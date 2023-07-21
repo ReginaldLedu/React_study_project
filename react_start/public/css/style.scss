@@ -45,7 +45,6 @@ body {
   width: 100%;
   height: 100%;
   font-family: 'StratosSkyeng', sans-serif;
-  color: #ffffff;
 }
 
 .wrapper {
@@ -53,13 +52,22 @@ body {
   min-height: 100%;
   overflow: hidden;
   background-color: #383838;
+  color: #ffffff;
 }
+.wrapper_light {
+  width: 100%;
+  min-height: 100%;
+  overflow: hidden;
+  background-color: white;
+  color: black;
+}
+
 .container {
   max-width: 1920px;
   height: 100vh;
   margin: 0 auto;
   position: relative;
-  background-color: #181818;
+  //background-color: #181818;
 }
 
 // ========== hover ========
@@ -260,37 +268,37 @@ body {
     border: 1px solid #ffffff;
     border-radius: 60px;
     padding: 6px 20px;
-	 position: relative;
+    position: relative;
 
     &:not(:last-child) {
       margin-right: 10px;
     }
   }
   &__pop-up {
-	height: 305px;
-	width: 248px;
-	border-radius: 12px;
-	display: flex;
-	flex-direction: column;
-	align-items: flex-start;
-	justify-content: center;
-	padding: 34px;
-	gap: 10px;
-	background: #313131;
-	z-index: 20;
-	position: absolute;
-	top:49px;
-	left:0;
+    height: 305px;
+    width: 248px;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 34px;
+    gap: 10px;
+    background: #313131;
+    z-index: 20;
+    position: absolute;
+    top: 49px;
+    left: 0;
   }
 }
-.pop-up__item{
-	color: #FFFFFF;
-	font-family: 'StratosSkyeng', sans-serif;
-	font-size: 20px;
-	font-weight: 400;
-	line-height: 24px;
-	letter-spacing: 0em;
-	text-align: left;
+.pop-up__item {
+  color: #ffffff;
+  font-family: 'StratosSkyeng', sans-serif;
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 24px;
+  letter-spacing: 0em;
+  text-align: left;
 }
 .content {
   &__title {
@@ -742,5 +750,3 @@ body {
     width: 109px;
   }
 }*/
-
-

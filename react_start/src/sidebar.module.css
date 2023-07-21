@@ -40,7 +40,7 @@
 .sidebar__avatar {
   width: 43px;
   height: 43px;
-  background-color: #313131;
+  /*background-color: #313131;*/
   border-radius: 50%;
 }
 .sidebar__block {

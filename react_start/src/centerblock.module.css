@@ -22,6 +22,25 @@
   flex-grow: 3;
   padding: 20px 40px 20px 111px;
 }
+main__centerblock-light {
+  width: auto;
+  -webkit-box-flex: 3;
+  -ms-flex-positive: 3;
+  flex-grow: 3;
+  padding: 20px 40px 20px 111px;
+  background-color: #ffffff;
+  color: #696969;
+}
+
+main-centerblock-dark {
+  width: auto;
+  -webkit-box-flex: 3;
+  -ms-flex-positive: 3;
+  flex-grow: 3;
+  padding: 20px 40px 20px 111px;
+  background-color: #696969;
+  color: #ffffff;
+}
 
 .main__sidebar {
   max-width: 418px;

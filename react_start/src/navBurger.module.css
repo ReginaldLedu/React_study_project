@@ -13,6 +13,13 @@
   background-color: #181818;
   padding: 20px 0 20px 36px;
 }
+
+.main__nav-light {
+  width: 244px;
+  background-color: rgba(255, 255, 255, 1);
+  padding: 20px 0 20px 36px;
+}
+
 .nav__logo {
   width: 113.33px;
   height: 43px;
@@ -59,6 +66,11 @@
 .menu__item {
   padding: 5px 0;
   margin-bottom: 16px;
+}
+
+.menu__icon {
+  width: 39px;
+  height: 39px;
 }
 .menu__link {
   color: #ffffff;

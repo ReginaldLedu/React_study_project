@@ -18,7 +18,7 @@ return(
 		isActive={activeIndex === null}
 		onShow={()=>{
 			setActiveIndex("performer")
-			console.log(activeIndex)
+			
 			activeIndex === "performer" ? 
 			setActiveIndex(null) : console.log(activeIndex) 
 			activeYear === "year" ? 
@@ -36,7 +36,7 @@ return(
 			isActive={activeYear === null}
 			onShow={()=>{
 			setActiveYear("year")
-			console.log(activeYear)
+			
 			activeYear === "year" ? setActiveYear(null)  : console.log(activeYear)
 			activeGenre === "genre" ? setActiveGenre(null)  : console.log(activeGenre)
 			activeIndex === "performer" ? 
@@ -49,7 +49,7 @@ return(
 		isActive={activeGenre === null}
 		onShow={()=>{
 			setActiveGenre("genre") 
-			console.log(activeGenre)
+			
 			activeGenre === "genre" ? setActiveGenre(null)  : console.log(activeYear)	
 			activeYear === "year" ? setActiveYear(null)  : console.log(activeYear)
 			activeIndex === "performer" ? 
