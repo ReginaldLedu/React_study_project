@@ -1,10 +1,11 @@
 import styles from './navBurger.module.css'
 import { NavLink } from 'react-router-dom'
-import { ThemeContext } from './main'
-import { useContext } from 'react'
+import { useThemeContext } from './main'
 
 function MenuNav() {
-  const theme = useContext(ThemeContext)
+  const { toggleTheme } = useThemeContext()
+  const { theme } = useThemeContext()
+
   return (
     <div className={styles['nav__menu']}>
       <ul className={styles['menu__list']}>
@@ -17,6 +18,7 @@ function MenuNav() {
             Главное
           </NavLink>
         </li>
+
         <li className={styles['menu__item']}>
           <NavLink
             className={styles['menu__link']}
@@ -26,6 +28,7 @@ function MenuNav() {
             Мой плейлист
           </NavLink>
         </li>
+
         <li className={styles['menu__item']}>
           <NavLink
             className={styles['menu__link']}
@@ -35,8 +38,13 @@ function MenuNav() {
             Выйти
           </NavLink>
         </li>
-        <li className={styles['menu__item']}>
-          <img src="dark.png" className={styles['menu__icon']}></img>
+
+        <li className={styles['menu__item']} onClick={toggleTheme}>
+          {theme.color === '#ffffff' ? (
+            <img src="dark.svg" className={styles['menu__icon']}></img>
+          ) : (
+            <img src="light.svg" className={styles['menu__icon']}></img>
+          )}
         </li>
       </ul>
     </div>

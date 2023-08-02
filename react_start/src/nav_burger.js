@@ -1,7 +1,9 @@
-import { useContext, useState } from 'react'
+import { useState } from 'react'
 import MenuNav from './menuNav'
 import styles from './navBurger.module.css'
-import { ThemeContext } from './main'
+import { useThemeContext } from './main'
+//import { useContext } from 'react'
+//import { ContextTheme } from './main'
 
 export const Nav = () => {
   const menuState = useState(false)
@@ -10,7 +12,8 @@ export const Nav = () => {
   function toggleVisibility() {
     menuHide(!menu)
   }
-  const theme = useContext(ThemeContext)
+  const { theme } = useThemeContext()
+  
 
   return (
     <nav

@@ -1,20 +1,26 @@
 import Filter from './filter'
 import styles from './centerblock.module.css'
-import { ThemeContext } from './main'
-import { useContext } from 'react'
+import { useThemeContext } from './main'
 import { NavLink } from 'react-router-dom'
 
 function CenterBlock() {
-  const theme = useContext(ThemeContext)
+  const { theme } = useThemeContext()
+
   return (
     <div className={styles['main__centerblock']}>
       <div className={styles['centerblock__search']}>
         <svg className={styles['search__svg']}>
-          <use xlinkHref="img/icon/sprite.svg#icon-search"></use>
+          {theme.color === '#ffffff' ? (
+            <use xlinkHref="img/icon/sprite.svg#icon-search"></use>
+          ) : (
+            <use xlinkHref="img/icon/sprite.svg#icon-search-light"></use>
+          )}
         </svg>
-        <input className={styles['search__text']}></input>
+        <input placeholder="Поиск" className={styles['search__text']}></input>
       </div>
-      <h2 className={styles['centerblock__h2']}>Треки</h2>
+      <h2 className={styles['centerblock__h2']} style={{ color: theme.color }}>
+        Треки
+      </h2>
       <Filter />
       <div className={styles['centerblock__content']}>
         <div
@@ -59,7 +65,10 @@ function CenterBlock() {
                     to="/main"
                   >
                     Guilt
-                    <span className={styles['track__title-span']}></span>
+                    <span
+                      className={styles['track__title-span']}
+                      style={{ color: theme.trackSpan }}
+                    ></span>
                   </NavLink>
                 </div>
               </div>
@@ -98,7 +107,10 @@ function CenterBlock() {
                     to="/main"
                   >
                     Guilt
-                    <span className={styles['track__title-span']}></span>
+                    <span
+                      className={styles['track__title-span']}
+                      style={{ color: theme.trackSpan }}
+                    ></span>
                   </NavLink>
                 </div>
               </div>
@@ -137,7 +149,10 @@ function CenterBlock() {
                     style={{ color: theme.color }}
                   >
                     Guilt
-                    <span className={styles['track__title-span']}></span>
+                    <span
+                      className={styles['track__title-span']}
+                      style={{ color: theme.trackSpan }}
+                    ></span>
                   </NavLink>
                 </div>
               </div>
@@ -176,7 +191,12 @@ function CenterBlock() {
                     to="/main"
                   >
                     Non Stop
-                    <span className={styles['track__title-span']}>(Remix)</span>
+                    <span
+                      className={styles['track__title-span']}
+                      style={{ color: theme.trackSpan }}
+                    >
+                      (Remix)
+                    </span>
                   </NavLink>
                 </div>
               </div>
@@ -215,7 +235,10 @@ function CenterBlock() {
                     to="/main"
                   >
                     Run Run
-                    <span className={styles['track__title-span']}>
+                    <span
+                      className={styles['track__title-span']}
+                      style={{ color: theme.trackSpan }}
+                    >
                       (feat. AR/CO)
                     </span>
                   </NavLink>
@@ -256,7 +279,10 @@ function CenterBlock() {
                     to="/main"
                   >
                     Eyes on Fire
-                    <span className={styles['track__title-span']}>
+                    <span
+                      className={styles['track__title-span']}
+                      style={{ color: theme.trackSpan }}
+                    >
                       (Zeds Dead Remix)
                     </span>
                   </NavLink>
@@ -297,7 +323,10 @@ function CenterBlock() {
                     to="/main"
                   >
                     Mucho Bien
-                    <span className={styles['track__title-span']}>
+                    <span
+                      className={styles['track__title-span']}
+                      style={{ color: theme.trackSpan }}
+                    >
                       (Hi Profile Remix)
                     </span>
                   </NavLink>
@@ -338,7 +367,10 @@ function CenterBlock() {
                     to="/main"
                   >
                     Knives n Cherries
-                    <span className={styles['track__title-span']}></span>
+                    <span
+                      className={styles['track__title-span']}
+                      style={{ color: theme.trackSpan }}
+                    ></span>
                   </NavLink>
                 </div>
               </div>
@@ -377,7 +409,10 @@ function CenterBlock() {
                     to="/main"
                   >
                     How Deep Is Your Love
-                    <span className="track__title-span"></span>
+                    <span
+                      className={styles['track__title-span']}
+                      style={{ color: theme.trackSpan }}
+                    ></span>
                   </NavLink>
                 </div>
               </div>
@@ -418,7 +453,10 @@ function CenterBlock() {
                     to="/main"
                   >
                     Morena
-                    <span className={styles['track__title-span']}></span>
+                    <span
+                      className={styles['track__title-span']}
+                      style={{ color: theme.trackSpan }}
+                    ></span>
                   </NavLink>
                 </div>
               </div>
@@ -459,7 +497,10 @@ function CenterBlock() {
                     to="/main"
                   >
                     Here we go
-                    <span className={styles['track__title-span']}></span>
+                    <span
+                      className={styles['track__title-span']}
+                      style={{ color: theme.trackSpan }}
+                    ></span>
                   </NavLink>
                 </div>
               </div>

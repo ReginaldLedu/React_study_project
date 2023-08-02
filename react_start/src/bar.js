@@ -1,5 +1,6 @@
 import styles from './bar.module.css'
 import { useRef, useState, useEffect } from 'react'
+import { useThemeContext } from './main'
 
 function Bar() {
   const [startPlay, setStartPlay] = useState(false)
@@ -8,6 +9,7 @@ function Bar() {
   const progressRef = useRef(null)
   const animationRef = useRef()
   const progressInsert = useRef(null)
+  const { theme } = useThemeContext()
   const play = () => {
     if (startPlay) {
       playRef.current.pause()
@@ -59,10 +61,21 @@ function Bar() {
           name="range"
           ref={progressInsert}
           onChange={changeRange}
-          style={{ color: 'purple', height: '5px', width: '100%' }}
+          style={{
+            background: theme.barProgress,
+            color: 'purple',
+            height: '5px',
+            width: '100%',
+          }}
         ></input>
       )}
-      <div ref={progressRef} className={styles['bar__player-progress']}></div>
+      <div
+        ref={progressRef}
+        className={styles['bar__player-progress']}
+        style={{
+          background: theme.barProgress,
+        }}
+      ></div>
       <div className={styles['bar__player-block']}>
         <div className={styles['bar__player']}>
           <div className={styles['player__controls']}>
