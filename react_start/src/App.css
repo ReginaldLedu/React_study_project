@@ -1,5 +1,5 @@
-*{
-	font-family: "StratosskyengReg";
+* {
+  font-family: 'Stratosskyeng';
 }
 
 .App {
@@ -42,7 +42,7 @@
 }
 
 @font-face {
-	font-family: StratosskyengReg;
-	src: url('statosskyeng-v1.001/Desktop fonts/stratosskyeng-regular.otf');
-	font-weight: 400;
- }
+  font-family: Stratosskyeng;
+  src: url('./Components/statosskyeng-v1.001/Desktop\ fonts/stratosskyeng-regular.otf');
+  font-weight: 400;
+}
