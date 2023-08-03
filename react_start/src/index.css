@@ -1,3 +1,12 @@
+* {
+  font-family: 'StratosskyengReg';
+}
+
+@font-face {
+  font-family: StratosskyengReg;
+  src: url('statosskyeng-v1.001/Desktop fonts/stratosskyeng-regular.otf');
+  font-weight: 400;
+}
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
