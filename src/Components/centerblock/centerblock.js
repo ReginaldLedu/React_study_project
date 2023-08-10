@@ -2,9 +2,232 @@ import Filter from './filter'
 import styles from './centerblock.module.css'
 import { useThemeContext } from '../main/main'
 import { NavLink } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 
 function CenterBlock() {
   const { theme } = useThemeContext()
+  const position = useSelector((state) => state.reducer.currentPosition)
+  const pulsation = useSelector((state) => state.pulsationReducer.pulsation)
+  const range = useSelector((state) => state.shuffleReducer.defaultRange)
+
+  function shuffled(arr) {
+    for (let i = arr.length - 1; i > 0; i--) {
+      let j = Math.floor(Math.random() * (i + 1))
+      ;[arr[i], arr[j]] = [arr[j], arr[i]]
+    }
+  }
+  const originalRange = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+  const forShuffled = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+  shuffled(forShuffled)
+
+  const shuffledRange = []
+  for (let i = 0; i < forShuffled.length; i++) {
+    shuffledRange.push(forShuffled[forShuffled[i]])
+  }
+
+  console.log(originalRange)
+  console.log(shuffledRange)
+  const originalPlaylist = []
+  for (let i = 0; i < 11; i++) {
+    if (i === position) {
+      originalPlaylist.push(
+        <div className={styles['playlist__item']}>
+          <div className={styles['playlist__track']}>
+            <div className={styles['track__title']}>
+              <div className={styles[`${pulsation}`]}></div>
+              <div className={styles['track__title-image']}>
+                <svg className={styles['track__title-svg']}>
+                  <use xlinkHref="img/icon/sprite.svg#icon-note"></use>
+                </svg>
+              </div>
+              <div className={styles['track__title-text']}>
+                <NavLink
+                  className={styles['track__title-link']}
+                  style={{ color: theme.color }}
+                  to="/main"
+                >
+                  Guilt {originalRange[i]}
+                  <span
+                    className={styles['track__title-span']}
+                    style={{ color: theme.trackSpan }}
+                  ></span>
+                </NavLink>
+              </div>
+            </div>
+            <div className={styles['track__author']}>
+              <NavLink
+                className={styles['track__author-link']}
+                style={{ color: theme.color }}
+                to="/main"
+              >
+                Nero
+              </NavLink>
+            </div>
+            <div className={styles['track__album']}>
+              <a className={styles['track__album-link']}>Welcome Reality</a>
+            </div>
+            <div className={styles['track__time']}>
+              <svg className={styles['track__time-svg']} alt="time">
+                <use xlinkHref="img/icon/sprite.svg#icon-like"></use>
+              </svg>
+              <span className={styles['track__time-text']}>4:44</span>
+            </div>
+          </div>
+        </div>
+      )
+    } else {
+      originalPlaylist.push(
+        <div className={styles['playlist__item']}>
+          <div className={styles['playlist__track']}>
+            <div className={styles['track__title']}>
+              <div className={styles['track__title-image']}>
+                <svg className={styles['track__title-svg']}>
+                  <use xlinkHref="img/icon/sprite.svg#icon-note"></use>
+                </svg>
+              </div>
+              <div className={styles['track__title-text']}>
+                <NavLink
+                  className={styles['track__title-link']}
+                  style={{ color: theme.color }}
+                  to="/main"
+                >
+                  Guilt {originalRange[i]}
+                  <span
+                    className={styles['track__title-span']}
+                    style={{ color: theme.trackSpan }}
+                  ></span>
+                </NavLink>
+              </div>
+            </div>
+            <div className={styles['track__author']}>
+              <NavLink
+                className={styles['track__author-link']}
+                style={{ color: theme.color }}
+                to="/main"
+              >
+                Nero
+              </NavLink>
+            </div>
+            <div className={styles['track__album']}>
+              <a className={styles['track__album-link']}>Welcome Reality</a>
+            </div>
+            <div className={styles['track__time']}>
+              <svg className={styles['track__time-svg']} alt="time">
+                <use xlinkHref="img/icon/sprite.svg#icon-like"></use>
+              </svg>
+              <span className={styles['track__time-text']}>4:44</span>
+            </div>
+          </div>
+        </div>
+      )
+    }
+  }
+
+  const shuffledPlayList = []
+  for (let i = 0; i < 11; i++) {
+    if (i === position) {
+      shuffledPlayList.push(
+        <div className={styles['playlist__item']}>
+          <div className={styles['playlist__track']}>
+            <div className={styles['track__title']}>
+              <div className={styles[`${pulsation}`]}></div>
+              <div className={styles['track__title-image']}>
+                <svg className={styles['track__title-svg']}>
+                  <use xlinkHref="img/icon/sprite.svg#icon-note"></use>
+                </svg>
+              </div>
+              <div className={styles['track__title-text']}>
+                <NavLink
+                  className={styles['track__title-link']}
+                  style={{ color: theme.color }}
+                  to="/main"
+                >
+                  Guilt {shuffledRange[i]}
+                  <span
+                    className={styles['track__title-span']}
+                    style={{ color: theme.trackSpan }}
+                  ></span>
+                </NavLink>
+              </div>
+            </div>
+            <div className={styles['track__author']}>
+              <NavLink
+                className={styles['track__author-link']}
+                style={{ color: theme.color }}
+                to="/main"
+              >
+                Nero
+              </NavLink>
+            </div>
+            <div className={styles['track__album']}>
+              <a className={styles['track__album-link']}>Welcome Reality</a>
+            </div>
+            <div className={styles['track__time']}>
+              <svg className={styles['track__time-svg']} alt="time">
+                <use xlinkHref="img/icon/sprite.svg#icon-like"></use>
+              </svg>
+              <span className={styles['track__time-text']}>4:44</span>
+            </div>
+          </div>
+        </div>
+      )
+    } else {
+      shuffledPlayList.push(
+        <div className={styles['playlist__item']}>
+          <div className={styles['playlist__track']}>
+            <div className={styles['track__title']}>
+              <div className={styles['track__title-image']}>
+                <svg className={styles['track__title-svg']}>
+                  <use xlinkHref="img/icon/sprite.svg#icon-note"></use>
+                </svg>
+              </div>
+              <div className={styles['track__title-text']}>
+                <NavLink
+                  className={styles['track__title-link']}
+                  style={{ color: theme.color }}
+                  to="/main"
+                >
+                  Guilt {shuffledRange[i]}
+                  <span
+                    className={styles['track__title-span']}
+                    style={{ color: theme.trackSpan }}
+                  ></span>
+                </NavLink>
+              </div>
+            </div>
+            <div className={styles['track__author']}>
+              <NavLink
+                className={styles['track__author-link']}
+                style={{ color: theme.color }}
+                to="/main"
+              >
+                Nero
+              </NavLink>
+            </div>
+            <div className={styles['track__album']}>
+              <a className={styles['track__album-link']}>Welcome Reality</a>
+            </div>
+            <div className={styles['track__time']}>
+              <svg className={styles['track__time-svg']} alt="time">
+                <use xlinkHref="img/icon/sprite.svg#icon-like"></use>
+              </svg>
+              <span className={styles['track__time-text']}>4:44</span>
+            </div>
+          </div>
+        </div>
+      )
+    }
+  }
+
+  //shuffled range
+
+  //const dispatch = useDispatch()
+  /*if (range > 0) {
+    dispatch({ type: 'shuffle', step: 1 })
+    
+  } else {
+    dispatch({ type: 'default', step: 1 })
+  }*/
 
   return (
     <div className={styles['main__centerblock']}>
@@ -49,10 +272,14 @@ function CenterBlock() {
             </svg>
           </div>
         </div>
+
         <div className={styles['content__playlist']}>
-          <div className={styles['playlist__item']}>
+          {range === 0 ? originalPlaylist : shuffledPlayList}
+
+          <>
+            {/* <div className={styles['playlist__item']}>
             <div className={styles['playlist__track']}>
-              <div className={styles['track__title']}>
+              <div id="1" className={styles['track__title']}>
                 <div className={styles['track__title-image']}>
                   <svg className={styles['track__title-svg']}>
                     <use xlinkHref="img/icon/sprite.svg#icon-note"></use>
@@ -94,7 +321,7 @@ function CenterBlock() {
           </div>
           <div className={styles['playlist__item']}>
             <div className={styles['playlist__track']}>
-              <div className={styles['track__title']}>
+              <div id="2" className={styles['track__title']}>
                 <div className={styles['track__title-image']}>
                   <svg className={styles['track__title-svg']}>
                     <use xlinkHref="img/icon/sprite.svg#icon-note"></use>
@@ -524,7 +751,8 @@ function CenterBlock() {
                 <span className={styles['track__time-text']}></span>
               </div>
             </div>
-          </div>
+          </div>*/}
+          </>
         </div>
       </div>
     </div>

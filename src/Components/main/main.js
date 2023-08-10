@@ -5,6 +5,8 @@ import Bar from '../bar/bar'
 import Footer from '../centerblock/footer'
 import { useState, useContext } from 'react'
 import { createContext } from 'react'
+import { Provider } from 'react-redux'
+import { store } from '../store/reducers/index'
 
 export const themes = {
   dark: {
@@ -58,10 +60,14 @@ function Main() {
           <div className="container">
             <main className="main">
               <Nav />
-              <CenterBlock />
+              <Provider store={store}>
+                <CenterBlock />
+              </Provider>
               <SideBar />
             </main>
-            <Bar />
+            <Provider store={store}>
+              <Bar />
+            </Provider>
             <Footer />
           </div>
         </div>

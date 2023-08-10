@@ -1,41 +1,68 @@
 import styles from './bar.module.css'
 import { useRef, useState, useEffect } from 'react'
 import { useThemeContext } from '../main/main'
+import { useDispatch, useSelector } from 'react-redux'
 
 function Bar() {
   const [startPlay, setStartPlay] = useState(false)
   const [playProgress, setPlayProgress] = useState(null)
+  console.log(playProgress)
   const playRef = useRef(null)
   const progressRef = useRef(null)
   const animationRef = useRef()
   const progressInsert = useRef(null)
   const { theme } = useThemeContext()
+  const range = useSelector((state) => state.shuffleReducer.defaultRange)
+  const currentPlayShow = () => {
+    if (position === -1) {
+      dispatch({ type: 'forward', step: 1 })
+    } else {
+      dispatch({ type: 'samePlace', step: 0 })
+    }
+  }
+
+  const pulsatioinStart = () => {
+    dispatch({ type: 'pulsatioinStart', step: 1 })
+  }
+  const pulsatioinStop = () => {
+    dispatch({ type: 'pulsationStop', step: 1 })
+  }
+
   const play = () => {
     if (startPlay) {
       playRef.current.pause()
       cancelAnimationFrame(animationRef.current)
+      pulsatioinStop()
       setStartPlay(false)
       return
     } else {
       playRef.current.play()
       animationRef.current = requestAnimationFrame(whilePlaying)
-      progressRef.current.style.display = 'none'
+      pulsatioinStart()
+      progressRef.current.style.visibility = 'hidden'
       setStartPlay(true)
       let time = playRef.current.currentTime
       setPlayProgress(time)
+      currentPlayShow()
     }
   }
+
   useEffect(() => {
     const seconds = Math.floor(playRef.current.duration)
     setPlayProgress(seconds)
-    console.log(playProgress)
   })
+
   const changeRange = () => {
     playRef.current.currentTime = progressInsert.current.value
     progressInsert.current.style.setProperty(
       '--seek-before-width',
       `${(progressInsert.current.value / playRef.current.duration) * 100}%`
     )
+  }
+
+  const stopPlaying = () => {
+    setPlayProgress(playProgress)
+    playRef.current.currentTime = 0
   }
 
   const changePlayerCurrentTime = () => {
@@ -45,14 +72,52 @@ function Bar() {
     )
   }
 
+  const autoPlayNextTrack = () => {
+    if (progressInsert.current.value === '100') {
+      playRef.current.currentTime = 0
+      progressInsert.current.value = playRef.current.currentTime
+      changePlayerCurrentTime()
+      forward()
+    }
+  }
+
   const whilePlaying = () => {
     progressInsert.current.value = playRef.current.currentTime
     changePlayerCurrentTime()
+    autoPlayNextTrack()
     animationRef.current = requestAnimationFrame(whilePlaying)
   }
 
+  //redux
+  const dispatch = useDispatch()
+  const position = useSelector((state) => state.reducer.currentPosition)
+  console.log(position)
+
+  const back = () => {
+    if (position > 0 && position <= 11) {
+      stopPlaying()
+      dispatch({ type: 'back', step: 1 })
+    } else dispatch({ type: 'default', step: 0 })
+  }
+
+  const shuffle = () => {
+    stopPlaying()
+    if (range === 0) {
+      dispatch({ type: 'shuffle', step: 1 })
+    } else dispatch({ type: 'default', step: 1 })
+    console.log(range)
+  }
+
+  const forward = () => {
+    if (position >= 0 && position < 10) {
+      stopPlaying()
+      dispatch({ type: 'forward', step: 1 })
+    } else dispatch({ type: 'default', step: 0 })
+    console.log('works')
+  }
+
   return (
-    <div className={styles['bar__content']}>
+    <div className={styles['bar__content']} id={position}>
       {startPlay && (
         <input
           type="range"
@@ -79,7 +144,12 @@ function Bar() {
       <div className={styles['bar__player-block']}>
         <div className={styles['bar__player']}>
           <div className={styles['player__controls']}>
-            <div className={styles['player__btn-prev']}>
+            <div
+              className={styles['player__btn-prev']}
+              onClick={() => {
+                back()
+              }}
+            >
               <svg className={styles['player__btn-prev-svg']}>
                 <use xlinkHref="img/icon/sprite.svg#icon-prev"></use>
               </svg>
@@ -94,7 +164,12 @@ function Bar() {
                 </svg>
               )}
             </div>
-            <div className={styles['player__btn-next']}>
+            <div
+              className={styles['player__btn-next']}
+              onClick={() => {
+                forward()
+              }}
+            >
               <svg className={styles['player__btn-next-svg']}>
                 <use xlinkHref="img/icon/sprite.svg#icon-next"></use>
               </svg>
@@ -104,7 +179,7 @@ function Bar() {
                 <use xlinkHref="img/icon/sprite.svg#icon-repeat"></use>
               </svg>
             </div>
-            <div className={styles['player__btn-shuffle']}>
+            <div className={styles['player__btn-shuffle']} onClick={shuffle}>
               <svg className={styles['player__btn-shuffle-svg']}>
                 <use xlinkHref="img/icon/sprite.svg#icon-shuffle"></use>
               </svg>
