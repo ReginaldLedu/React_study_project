@@ -2,7 +2,7 @@ import styles from './navBurger.module.css'
 import { NavLink } from 'react-router-dom'
 import { useThemeContext } from '../main/main'
 
-function MenuNav() {
+function MenuNav(/*eslint-disable*/ { startPlay, setStartPlay }) {
   const { toggleTheme } = useThemeContext()
   const { theme } = useThemeContext()
 
@@ -29,7 +29,12 @@ function MenuNav() {
           </NavLink>
         </li>
 
-        <li className={styles['menu__item']}>
+        <li
+          className={styles['menu__item']}
+          onClick={() => {
+            setStartPlay({ ...startPlay, startPlay: false })
+          }}
+        >
           <NavLink
             className={styles['menu__link']}
             to="/"

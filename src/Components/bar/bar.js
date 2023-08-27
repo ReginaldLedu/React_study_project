@@ -1,17 +1,19 @@
 import styles from './bar.module.css'
-import { useRef, useState, useEffect } from 'react'
+import { useRef, useEffect } from 'react'
 import { useThemeContext } from '../main/main'
 import { useDispatch, useSelector } from 'react-redux'
+import { addToFavorites } from '../store/reducers/async'
 
-function Bar() {
-  const [startPlay, setStartPlay] = useState(false)
-  const [playProgress, setPlayProgress] = useState(null)
-  console.log(playProgress)
+function Bar(
+  /*eslint-disable*/ { startPlay, setStartPlay, playProgress, setPlayProgress }
+) {
   const playRef = useRef(null)
   const progressRef = useRef(null)
   const animationRef = useRef()
   const progressInsert = useRef(null)
   const { theme } = useThemeContext()
+  const dispatch = useDispatch()
+  const position = useSelector((state) => state.reducer.currentPosition)
   const range = useSelector((state) => state.shuffleReducer.defaultRange)
   const currentPlayShow = () => {
     if (position === -1) {
@@ -24,32 +26,42 @@ function Bar() {
   const pulsatioinStart = () => {
     dispatch({ type: 'pulsatioinStart', step: 1 })
   }
+
   const pulsatioinStop = () => {
     dispatch({ type: 'pulsationStop', step: 1 })
   }
+  const start = () => {
+    setStartPlay({ ...startPlay, startPlay: true })
+  }
+  const stop = () => {
+    setStartPlay({ ...startPlay, startPlay: false })
+  }
 
   const play = () => {
-    if (startPlay) {
-      playRef.current.pause()
-      cancelAnimationFrame(animationRef.current)
-      pulsatioinStop()
-      setStartPlay(false)
-      return
-    } else {
+    console.log(startPlay)
+    if (startPlay.startPlay === false) {
+      start()
       playRef.current.play()
       animationRef.current = requestAnimationFrame(whilePlaying)
       pulsatioinStart()
       progressRef.current.style.visibility = 'hidden'
-      setStartPlay(true)
       let time = playRef.current.currentTime
-      setPlayProgress(time)
+      ;() => {
+        setPlayProgress(time)
+      }
       currentPlayShow()
+    } else {
+      stop()
+      playRef.current.pause()
+      cancelAnimationFrame(animationRef.current)
+      pulsatioinStop()
+      return
     }
   }
 
   useEffect(() => {
     const seconds = Math.floor(playRef.current.duration)
-    setPlayProgress(seconds)
+    ;() => setPlayProgress(seconds)
   })
 
   const changeRange = () => {
@@ -61,7 +73,7 @@ function Bar() {
   }
 
   const stopPlaying = () => {
-    setPlayProgress(playProgress)
+    ;() => setPlayProgress(playProgress)
     playRef.current.currentTime = 0
   }
 
@@ -82,15 +94,16 @@ function Bar() {
   }
 
   const whilePlaying = () => {
-    progressInsert.current.value = playRef.current.currentTime
-    changePlayerCurrentTime()
-    autoPlayNextTrack()
-    animationRef.current = requestAnimationFrame(whilePlaying)
+    if (progressInsert.current !== null) {
+      progressInsert.current.value = playRef.current.currentTime
+      changePlayerCurrentTime()
+      autoPlayNextTrack()
+      animationRef.current = requestAnimationFrame(whilePlaying)
+    }
   }
 
   //redux
-  const dispatch = useDispatch()
-  const position = useSelector((state) => state.reducer.currentPosition)
+
   console.log(position)
 
   const back = () => {
@@ -104,7 +117,7 @@ function Bar() {
     stopPlaying()
     if (range === 0) {
       dispatch({ type: 'shuffle', step: 1 })
-    } else dispatch({ type: 'default', step: 1 })
+    } else dispatch({ type: 'default' })
     console.log(range)
   }
 
@@ -118,7 +131,7 @@ function Bar() {
 
   return (
     <div className={styles['bar__content']} id={position}>
-      {startPlay && (
+      {startPlay.startPlay === true ? (
         <input
           type="range"
           defaultValue="0"
@@ -133,6 +146,8 @@ function Bar() {
             width: '100%',
           }}
         ></input>
+      ) : (
+        ''
       )}
       <div
         ref={progressRef}
@@ -154,9 +169,9 @@ function Bar() {
                 <use xlinkHref="img/icon/sprite.svg#icon-prev"></use>
               </svg>
             </div>
-            <div className={styles['player__btn-play']} onClick={play}>
+            <div className={styles['player__btn-play']} onClick={() => play()}>
               <audio ref={playRef} src="track.mp3"></audio>
-              {startPlay ? (
+              {startPlay.startPlay === true ? (
                 <img src="img/icon/stop.svg"></img>
               ) : (
                 <svg className={styles['player__btn-play-svg']}>
@@ -206,6 +221,7 @@ function Bar() {
             <div className={styles['track-play__like-dis']}>
               <div
                 className={`${styles['track-play__like']} ${styles['_btn-icon']}`}
+                onClick={() => addToFavorites()}
               >
                 <svg className={styles['track-play__like-svg']}>
                   <use xlinkHref="img/icon/sprite.svg#icon-like"></use>

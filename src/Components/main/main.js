@@ -1,12 +1,13 @@
 import Nav from '../nav/nav_burger'
 import CenterBlock from '../centerblock/centerblock'
 import SideBar from '../sidebar/sidebar'
-import Bar from '../bar/bar'
+import { Playlist } from '../centerblock/contentPlaylist'
 import Footer from '../centerblock/footer'
 import { useState, useContext } from 'react'
 import { createContext } from 'react'
 import { Provider } from 'react-redux'
 import { store } from '../store/reducers/index'
+import styles from '../centerblock/centerblock.module.css'
 
 export const themes = {
   dark: {
@@ -36,14 +37,15 @@ export const ContextTheme = createContext({
 
 export const useThemeContext = () => {
   const theme = useContext(ContextTheme)
-  console.log(theme.color)
-  console.log(theme.background)
+
   if (!theme) return themes.dark
 
   return theme
 }
 
-function Main() {
+function Main(
+  /*eslint-disable*/ { startPlay, setStartPlay, playProgress, setPlayProgress }
+) {
   const [theme, setLighTheme] = useState(themes.dark)
   const toggleTheme = () => {
     if (theme !== themes.dark) {
@@ -59,15 +61,20 @@ function Main() {
         <div className="wrapper" style={{ background: theme.background }}>
           <div className="container">
             <main className="main">
-              <Nav />
-              <Provider store={store}>
-                <CenterBlock />
-              </Provider>
+              <Nav
+                startPlay={startPlay}
+                setStartPlay={setStartPlay}
+                playProgress={playProgress}
+                setPlayProgress={setPlayProgress}
+              />
+              <div className={styles['main__centerblock']}>
+                <Provider store={store}>
+                  <CenterBlock />
+                  <Playlist startPlay={startPlay} setStartPlay={setStartPlay} />
+                </Provider>
+              </div>
               <SideBar />
             </main>
-            <Provider store={store}>
-              <Bar />
-            </Provider>
             <Footer />
           </div>
         </div>
