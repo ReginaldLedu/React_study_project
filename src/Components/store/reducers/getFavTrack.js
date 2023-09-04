@@ -1,5 +1,6 @@
-import { configureStore } from '@reduxjs/toolkit'
-export const favTrackFromPlaylist = {
+import { configureStore,  } from '@reduxjs/toolkit'
+
+/*export const favTrackFromPlaylist = {
   defaultFavTrackFromPlaylist: [],
 }
 export const favTrackFromPlaylistReducer = (
@@ -22,11 +23,31 @@ export const favTrackFromPlaylistReducer = (
 export const favTrackFromPlaylistActionCreator = (payload) => ({
   type: 'add to favorites',
   payload,
-})
+})*/
 
 export const defaultFavTrack = {
   defaultFavTracks: {},
 }
+/*export const initialStateFav = {
+  initialFav: [],
+}*/
+
+/*export const addToFavoritesSlice = createSlice({
+  name: 'favoritesToolkit',
+  initialStateFav,
+  reducers: {
+    addToFavorites: (state, action) => {
+      state.initialFav = state.push(action.payload)
+    },
+    removeFromFavorites: (state, action) => {
+      state.initialFav = state.filter((id) => id === action.payload.id)
+    },
+  },
+})
+export const { addToFavorites, removeFromFavorites } =
+  addToFavoritesSlice.actions
+export default addToFavoritesSlice.reducer*/
+
 export const addToFavoritesReducer = (state = defaultFavTrack, action) => {
   switch (action.type) {
     case 'add to favorites':
@@ -39,7 +60,6 @@ export const addToFavoritesReducer = (state = defaultFavTrack, action) => {
         ...state,
         defaultFavTracks: { ...state.defaultFavTracks, ...action.payload },
       }
-
     default:
       return state
   }

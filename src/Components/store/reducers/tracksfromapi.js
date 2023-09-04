@@ -1,4 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit'
+
 export const defaultTracks = {
   defaultTracks: [],
 }
@@ -25,6 +26,7 @@ export const store = configureStore({ reducer: tracksReducer })
 export const defaultAllFavoriteTrack = {
   defaultAllFavoriteTracks: [],
 }
+
 export const AllFavoriteTracksReducer = (
   state = defaultAllFavoriteTrack,
   action
@@ -33,12 +35,8 @@ export const AllFavoriteTracksReducer = (
     case 'get all favorite tracks':
       return {
         ...state,
-        defaultAllFavoriteTracks: [
-          ...state.defaultAllFavoriteTracks,
-          ...action.payload,
-        ],
+        defaultAllFavoriteTracks: [...action.payload],
       }
-
     default:
       return state
   }

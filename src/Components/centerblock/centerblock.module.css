@@ -8,6 +8,10 @@
   font-weight: 400;
 }
 
+.liked {
+  fill: #b882ff;
+}
+
 .main {
   flex: 1 1 auto;
   display: flex;

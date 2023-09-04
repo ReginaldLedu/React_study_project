@@ -80,18 +80,6 @@ export function fetchGetAllFavorites(token) {
       .then((data) => console.log(data))
   }
 }
-/*export async function addToFavoritesAsync(token) {
-  const getFavs = await fetch(
-    'https://painassasin.online/catalog/track/favorite/all/',
-    {
-      headers: {
-        Authorization: token,
-      },
-    }
-  )
-  const getFavorites = await getFavs.json()
-  console.log(getFavorites)
-}*/
 
 export function addToFavorites(id, token) {
   return function (dispatch) {
@@ -128,55 +116,3 @@ export async function fetchRegister(loginState, passwordState) {
   console.log(data)
   return data
 }
-
-/*export async function fetchLogin(login, password) {
-  const loginResponse = await fetch('https://painassasin.online/user/login/', {
-    method: 'POST',
-    body: JSON.stringify({
-      email: login,
-      password: password,
-    }),
-    headers: {
-      // API требует обязательного указания заголовка content-type, так апи понимает что мы посылаем ему json строчку в теле запроса
-      'content-type': 'application/json',
-    },
-  })
-  const loginData = await loginResponse.json()
-  console.log(loginData)
-  return loginData
-}*/
-
-/*export async function fetchaAccessToken(login, password) {
-  const tokenResponse = await fetch('https://painassasin.online/user/token/', {
-    method: 'POST',
-    body: JSON.stringify({
-      email: login,
-      password: password,
-    }),
-    headers: {
-      // API требует обязательного указания заголовка content-type, так апи понимает что мы посылаем ему json строчку в теле запроса
-      'content-type': 'application/json',
-    },
-  })
-  const tokenData = await tokenResponse.json()
-  console.log(tokenData)
-  return tokenData
-}*/
-
-/*export async function addToFavorites(id, token) {
-  const add = await fetch(
-    `https://painassasin.online/catalog/track/${id}/favorite/`,
-    {
-      method: 'POST',
-      body: JSON.stringify({
-        id: id,
-      }),
-      headers: {
-        'content-type': 'application/json',
-        Authorization: token,
-      },
-    }
-  )
-  const addToFav = await add.json()
-  console.log(addToFav)
-}*/

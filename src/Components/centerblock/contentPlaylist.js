@@ -1,44 +1,43 @@
 import styles from './centerblock.module.css'
 import { useEffect } from 'react'
-import { useState } from 'react'
+//import { useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useThemeContext } from '../main/main'
 import { NavLink } from 'react-router-dom'
 import { fetchTracks } from '../store/reducers/async'
 import { addToFavorites } from '../store/reducers/async'
-import { removeFromFavoritesActionCreator } from '../store/reducers/getFavTrack'
+//import { removeFromFavoritesActionCreator } from '../store/reducers/getFavTrack'
 //import { fetchGetAllFavorites } from '../store/reducers/async'
 //import { favTrackFromPlaylistActionCreator } from '../store/reducers/getFavTrack'
 
 export function Playlist() {
   const dispatch = useDispatch()
   const { theme } = useThemeContext()
-  const position = useSelector((state) => state.reducer.currentPosition)
-  const pulsation = useSelector((state) => state.pulsationReducer.pulsation)
+  const position = useSelector(
+    (state) => state.currentPlayShowReducer.currentPosition
+  )
+  const pulsation = useSelector((state) => state.pulsationToolkit.pulsation)
   const range = useSelector((state) => state.shuffleReducer.defaultRange)
   const tracks = useSelector((state) => state.tracksReducer.defaultTracks)
   const tokens = useSelector((state) => state.tokenReducer.defaultTokens)
-  const favTrack = useSelector(
+  /*const favTrack = useSelector(
     (state) => state.addToFavoritesReducer.defaultFavTracks
-  )
-  // let favorites = []
+  )*/
+
   const allFavorites = useSelector(
     (state) => state.AllFavoriteTracksReducer.defaultAllFavoriteTracks
   )
   console.log(allFavorites)
-  const favTrackFromPlaylist = useSelector(
-    (state) => state.favTrackFromPlaylistReducer.defaultFavTrackFromPlaylist
-  )
-  console.log(favTrackFromPlaylist)
-  const [liked, setLiked] = useState(false)
-  function setLike() {
+
+  //const [liked, setLiked] = useState(false)
+  /*function setLike() {
     if (liked === false) {
       setLiked(true)
     } else {
       setLiked(false)
       console.log(liked)
     }
-  }
+  }*/
 
   function shuffled(arr) {
     for (let i = arr.length - 1; i > 0; i--) {
@@ -71,17 +70,7 @@ export function Playlist() {
   }*/
 
   return (
-    <div
-      className={styles['content__playlist']}
-      /*onClick={() => {
-        {
-          dispatch(fetchTracks())
-        console.log(tracks)
-        console.log(typeof tracks)
-		console.log(tokens.refresh)
-        }
-      }}*/
-    >
+    <div className={styles['content__playlist']}>
       {tracks.length > 0 ? (
         range === 0 ? (
           originalRange.map((track) => (
@@ -133,24 +122,14 @@ export function Playlist() {
                   <svg
                     className={styles['track__time-svg']}
                     alt="time"
-                    onClick={() => {
-                      console.log(tracks[originalRange.indexOf(track)].id)
-                      console.log(favTrack.detail)
-                      //dispatch(fetchGetAllFavorites(`Bearer ${tokens.access}`))
-                      setLike()
+                    onClick={(event) => {
+                      event.target.classList.toggle(styles['liked'])
                       dispatch(
                         addToFavorites(
-                          tracks[originalRange.indexOf(track)].id,
+                          tracks[originalRange[track]].id,
                           `Bearer ${tokens.access}`
                         )
                       )
-
-                      {
-                        /*addTrack(tracks[originalRange]),
-                        console.log(favTrackFromPlaylist)*/
-                      }
-
-                      //dispatch(fetchGetAllFavorites(`Bearer ${tokens.access}`))
                     }}
                   >
                     <use xlinkHref="img/icon/sprite.svg#icon-like"></use>
@@ -210,27 +189,14 @@ export function Playlist() {
                   <svg
                     className={styles['track__time-svg']}
                     alt="time"
-                    onClick={() => {
-                      console.log(tracks[shuffledRange[track]].id)
-                      console.log(favTrack.detail)
-                      setLike()
-                      if (liked === false) {
-                        dispatch(
-                          addToFavorites(
-                            tracks[shuffledRange[track]].id,
-                            `Bearer ${tokens.access}`
-                          )
+                    onClick={(event) => {
+                      event.target.classList.toggle(styles['liked'])
+                      dispatch(
+                        addToFavorites(
+                          tracks[shuffledRange[track]].id,
+                          `Bearer ${tokens.access}`
                         )
-                      } else {
-                        dispatch(
-                          removeFromFavoritesActionCreator(
-                            tracks[shuffledRange[track]].id,
-                            `Bearer ${tokens.access}`
-                          )
-                        )
-                      }
-                      //dispatch(fetchGetAllFavorites(`Bearer ${tokens.access}`))
-                      console.log(favTrack)
+                      )
                     }}
                   >
                     <use xlinkHref="img/icon/sprite.svg#icon-like"></use>
@@ -247,8 +213,6 @@ export function Playlist() {
     </div>
   )
 }
-
-
 
 /* <>
 	<div className={styles['playlist__item']}>

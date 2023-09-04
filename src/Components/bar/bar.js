@@ -3,6 +3,8 @@ import { useRef, useEffect } from 'react'
 import { useThemeContext } from '../main/main'
 import { useDispatch, useSelector } from 'react-redux'
 import { addToFavorites } from '../store/reducers/async'
+import { pulsationStart } from '../store/reducers/pulsationForCurrentPlayingItem'
+import { pulsationStop } from '../store/reducers/pulsationForCurrentPlayingItem'
 
 function Bar(
   /*eslint-disable*/ { startPlay, setStartPlay, playProgress, setPlayProgress }
@@ -13,7 +15,9 @@ function Bar(
   const progressInsert = useRef(null)
   const { theme } = useThemeContext()
   const dispatch = useDispatch()
-  const position = useSelector((state) => state.reducer.currentPosition)
+  const position = useSelector(
+    (state) => state.currentPlayShowReducer.currentPosition
+  )
   const range = useSelector((state) => state.shuffleReducer.defaultRange)
   const currentPlayShow = () => {
     if (position === -1) {
@@ -23,13 +27,21 @@ function Bar(
     }
   }
 
-  const pulsatioinStart = () => {
+  /*const pulsatioinStart = () => {
     dispatch({ type: 'pulsatioinStart', step: 1 })
+  }*/
+
+  /*const pulsatioinStop = () => {
+    dispatch({ type: 'pulsationStop', step: 1 })
+  }*/
+
+  const pulsationStartLaunch = () => {
+    dispatch(pulsationStart())
+  }
+  const pulsationStopLaunch = () => {
+    dispatch(pulsationStop())
   }
 
-  const pulsatioinStop = () => {
-    dispatch({ type: 'pulsationStop', step: 1 })
-  }
   const start = () => {
     setStartPlay({ ...startPlay, startPlay: true })
   }
@@ -43,7 +55,7 @@ function Bar(
       start()
       playRef.current.play()
       animationRef.current = requestAnimationFrame(whilePlaying)
-      pulsatioinStart()
+      pulsationStartLaunch()
       progressRef.current.style.visibility = 'hidden'
       let time = playRef.current.currentTime
       ;() => {
@@ -54,7 +66,7 @@ function Bar(
       stop()
       playRef.current.pause()
       cancelAnimationFrame(animationRef.current)
-      pulsatioinStop()
+      pulsationStopLaunch()
       return
     }
   }

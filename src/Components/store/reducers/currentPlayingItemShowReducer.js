@@ -3,7 +3,7 @@ import { configureStore } from '@reduxjs/toolkit'
 export const defaultState = {
   currentPosition: -1,
 }
-export const reducer = (state = defaultState, action) => {
+export const currentPlayShowReducer = (state = defaultState, action) => {
   switch (action.type) {
     case 'forward':
       return { ...state, currentPosition: state.currentPosition + 1 }
@@ -17,4 +17,4 @@ export const reducer = (state = defaultState, action) => {
       return state
   }
 }
-export const store = configureStore({ reducer: reducer })
+export const store = configureStore({ reducer: currentPlayShowReducer })
