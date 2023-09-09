@@ -1,16 +1,10 @@
 import styles from './centerblock.module.css'
 import { useEffect, useState } from 'react'
-//import { useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useThemeContext } from '../main/main'
 import { NavLink } from 'react-router-dom'
-//import { fetchTracks } from '../store/reducers/async'
-//import { addToFavorites } from '../store/reducers/async'
-//import { removeFromFavoritesActionCreator } from '../store/reducers/getFavTrack'
 import { fetchRemoveFromFavorites } from '../store/reducers/async'
 import { fetchGetAllFavorites } from '../store/reducers/async'
-//import { removeFromFavorites } from '../store/reducers/getFavTrack'
-//import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
 export function PlaylistForFavorites() {
   const allFavorites = useSelector(
@@ -29,51 +23,21 @@ export function PlaylistForFavorites() {
     console.log(favTracks)
   }
 
-  //useEffect(() => favoritePlayListCreation(), [])
-
-  /*const removeFromFavorites = (track) => {
-    favTracks.filter(function (track) {
-      return track.id !== 9
-    })
-    console.log(favTracks)
-  }*/
+  useEffect(() => favoritePlayListCreation(), [])
 
   const { theme } = useThemeContext()
   const position = useSelector(
     (state) => state.currentPlayShowReducer.currentPosition
   )
   const pulsation = useSelector((state) => state.pulsationToolkit.pulsation)
-  //const range = useSelector((state) => state.shuffleReducer.defaultRange)
-  //const tracks = useSelector((state) => state.tracksReducer.defaultTracks)
+
   const tokens = useSelector((state) => state.tokenReducer.defaultTokens)
   const fav = useSelector(
     (state) => state.addToFavoritesReducer.defaultFavTracks
   )
-  /*const removeFromFavSlice = () => {
-    dispatch(removeFromFavorites())
-  }*/
 
-  //favorites = allFavorites
-  // const [liked, setLiked] = useState(false)
-  /* function setLike() {
-    if (liked === false) {
-      setLiked(true)
-    } else {
-      setLiked(false)
-      console.log(liked)
-    }
-  }*/
-  useEffect(() => favoritePlayListCreation, [])
   return (
-    <div
-      className={styles['content__playlist']}
-      /*onClick={() => {
-        {
-          dispatch(fetchGetAllFavorites(`Bearer ${tokens.access}`))
-          console.log(tokens.refresh)
-        }
-      }}*/
-    >
+    <div className={styles['content__playlist']}>
       {allFavorites.length > 0 ? (
         favTracks.map((track) => (
           <div

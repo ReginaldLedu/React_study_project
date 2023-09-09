@@ -28,6 +28,7 @@ export const fetchLogin = (login, password) => {
       .then((response) => response.json())
       .then((json) => dispatch(getLoginCreator(json)))
       .then((data) => console.log(data))
+      .then((data) => console.log(`seems doesn't work ${data}`))
   }
 }
 

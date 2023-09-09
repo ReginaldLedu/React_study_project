@@ -1,14 +1,10 @@
 import styles from './centerblock.module.css'
 import { useEffect } from 'react'
-//import { useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useThemeContext } from '../main/main'
 import { NavLink } from 'react-router-dom'
 import { fetchTracks } from '../store/reducers/async'
 import { addToFavorites } from '../store/reducers/async'
-//import { removeFromFavoritesActionCreator } from '../store/reducers/getFavTrack'
-//import { fetchGetAllFavorites } from '../store/reducers/async'
-//import { favTrackFromPlaylistActionCreator } from '../store/reducers/getFavTrack'
 
 export function Playlist() {
   const dispatch = useDispatch()
@@ -20,24 +16,11 @@ export function Playlist() {
   const range = useSelector((state) => state.shuffleReducer.defaultRange)
   const tracks = useSelector((state) => state.tracksReducer.defaultTracks)
   const tokens = useSelector((state) => state.tokenReducer.defaultTokens)
-  /*const favTrack = useSelector(
-    (state) => state.addToFavoritesReducer.defaultFavTracks
-  )*/
 
   const allFavorites = useSelector(
     (state) => state.AllFavoriteTracksReducer.defaultAllFavoriteTracks
   )
   console.log(allFavorites)
-
-  //const [liked, setLiked] = useState(false)
-  /*function setLike() {
-    if (liked === false) {
-      setLiked(true)
-    } else {
-      setLiked(false)
-      console.log(liked)
-    }
-  }*/
 
   function shuffled(arr) {
     for (let i = arr.length - 1; i > 0; i--) {
@@ -57,17 +40,6 @@ export function Playlist() {
   for (let i = 0; i < forShuffled.length; i++) {
     shuffledRange.push(forShuffled[forShuffled[i]])
   }
-
-  /*const addTrack = (track) => {
-    const tr = {
-      track,
-      id: Date.now(),
-    }
-    dispatch({
-      type: 'add to favorites from playlist',
-      payload: tr,
-    })
-  }*/
 
   return (
     <div className={styles['content__playlist']}>

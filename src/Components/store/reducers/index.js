@@ -7,12 +7,8 @@ import { loginReducer } from './tokenFromAPIReducer'
 import { addToFavoritesReducer } from './getFavTrack'
 import { AllFavoriteTracksReducer } from './tracksfromapi'
 import { configureStore, combineReducers } from '@reduxjs/toolkit'
-//import { addToFavoritesSlice } from './getFavTrack'
-
-//import thunk from 'redux-thunk'
 
 const rootReducer = combineReducers({
-  //favoritesToolkit: addToFavoritesSlice.reducer,
   currentPlayShowReducer,
   pulsationToolkit: pulsationSlice.reducer,
   shuffleReducer,
@@ -25,6 +21,4 @@ const rootReducer = combineReducers({
 export const store = configureStore({
   reducer: rootReducer,
   middleware: (getDefaultMiddleware) => getDefaultMiddleware(),
-
-  /*middleware: [thunk],*/
 })
