@@ -1,33 +1,25 @@
-import { configureStore } from '@reduxjs/toolkit'
+import { createSlice } from '@reduxjs/toolkit'
 
-export const defaultTracks = {
-  defaultTracks: [],
+const initialState = {
+  initialState: [],
 }
-export const tracksReducer = (state = defaultTracks, action) => {
-  switch (action.type) {
-    case 'add all tracks':
-      return {
-        ...state,
-        defaultTracks: [...state.defaultTracks, ...action.payload],
-      }
-    case 'add track':
-      return {
-        ...state,
-        defaultTracks: [...state.defaultTracks, action.payload],
-      }
-
-    default:
-      return state
-  }
-}
-export const addAllTracks = (payload) => ({ type: 'add all tracks', payload })
-export const store = configureStore({ reducer: tracksReducer })
+export const allTracksSlice = createSlice({
+  name: 'allTracksToolkit',
+  initialState,
+  reducers: {
+    allTracks: (state, action) => {
+      state.initialState = action.payload
+    },
+  },
+})
+export const { allTracks, allTracksDis } = allTracksSlice.actions
+export default allTracksSlice.reducer
 
 export const defaultAllFavoriteTrack = {
   defaultAllFavoriteTracks: [],
 }
 
-export const AllFavoriteTracksReducer = (
+/*export const AllFavoriteTracksReducer = (
   state = defaultAllFavoriteTrack,
   action
 ) => {
@@ -37,11 +29,19 @@ export const AllFavoriteTracksReducer = (
         ...state,
         defaultAllFavoriteTracks: [...action.payload],
       }
+    case 'for empty tokens':
+      return {
+        state,
+      }
     default:
       return state
   }
 }
+export const EmptyTokenFavTracks = (state) => ({
+  type: 'for empty tokens',
+  state,
+})
 export const AllFavoriteTracksActionCreator = (payload) => ({
   type: 'get all favorite tracks',
   payload,
-})
+})*/

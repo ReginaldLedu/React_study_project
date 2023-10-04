@@ -1,15 +1,20 @@
 import { useParams } from 'react-router-dom'
 import { trackLists } from './tracks.js'
 import Nav from '../nav/nav_burger'
+import { Wrapper } from '../main/wrapper'
 import CenterBlock from '../centerblock/centerblock'
 import SideBar from '../sidebar/sidebar'
 import Footer from '../centerblock/footer'
-import { useState, useContext } from 'react'
+import { useState, useContext, useEffect } from 'react'
 import { createContext } from 'react'
 import { Provider } from 'react-redux'
 import { store } from '../store/reducers/index'
-import { Playlist } from '../centerblock/contentPlaylist.js'
+import { PlaylistForSelected } from '../centerblock/selectedPlaylist.js'
 import styles from '../centerblock/centerblock.module.css'
+import { useSelector, useDispatch } from 'react-redux'
+import { fetchSelectionTracks } from '../store/reducers/async.js'
+import { renderTracks } from '../store/reducers/renderedTracks.js'
+import { fetchTracks } from '../store/reducers/async.js'
 
 export const themes = {
   dark: {
@@ -48,7 +53,21 @@ export const useThemeContext = () => {
 
 function TracklistChosen(/*eslint-disable*/ { startPlay, setStartPlay }) {
   const params = useParams()
+  const dispatch = useDispatch()
+  const selectionPlaylistTracks = useSelector(
+    (state) => state.selectionPlaylistToolkit.initialState
+  )
+  console.log(selectionPlaylistTracks)
   const trackList = trackLists.find((tracklist) => tracklist.id === params.id)
+  console.log(trackList)
+  useEffect(() => {
+    dispatch(fetchTracks())
+  }, [])
+  useEffect(() => {
+    dispatch(fetchSelectionTracks(trackList.id))
+    dispatch(renderTracks(selectionPlaylistTracks))
+  }, [trackList.id])
+
   const [theme, setLighTheme] = useState(themes.dark)
   const toggleTheme = () => {
     if (theme !== themes.dark) {
@@ -58,24 +77,32 @@ function TracklistChosen(/*eslint-disable*/ { startPlay, setStartPlay }) {
       setLighTheme(themes.light)
     }
   }
+
   return (
     <div key={trackList.id}>
       <ContextTheme.Provider value={{ theme, toggleTheme }}>
-        <div className="wrapper" style={{ background: theme.background }}>
-          <div className="container">
-            <main className="main">
-              <Nav />
-              <div className={styles['main__centerblock']}>
+        <Provider store={store}>
+          <Wrapper>
+            <div className="container">
+              <main className="main">
+                <Nav />
+                <div className={styles['main__centerblock']}>
+                  <Provider store={store}>
+                    <CenterBlock />
+                    <PlaylistForSelected
+                      startPlay={startPlay}
+                      setStartPlay={setStartPlay}
+                    />
+                  </Provider>
+                </div>
                 <Provider store={store}>
-                  <CenterBlock />
-                  <Playlist startPlay={startPlay} setStartPlay={setStartPlay} />
+                  <SideBar />
                 </Provider>
-              </div>
-              <SideBar />
-            </main>
-            <Footer />
-          </div>
-        </div>
+              </main>
+              <Footer />
+            </div>
+          </Wrapper>
+        </Provider>
       </ContextTheme.Provider>
     </div>
   )

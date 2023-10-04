@@ -2,6 +2,7 @@ export default Favorites
 import Nav from '../nav/nav_burger'
 import CenterBlock from '../centerblock/centerblock'
 import SideBar from '../sidebar/sidebar'
+import { Wrapper } from '../main/wrapper'
 import Footer from '../centerblock/footer'
 import { useState, useContext } from 'react'
 import { createContext } from 'react'
@@ -56,33 +57,39 @@ function Favorites(
       setLighTheme(themes.light)
     }
   }
+
   return (
     <>
       <ContextTheme.Provider value={{ theme, toggleTheme }}>
-        <div className="wrapper" style={{ background: theme.background }}>
-          <div className="container">
-            <main className="main">
-              <Nav
-                startPlay={startPlay}
-                setStartPlay={setStartPlay}
-                playProgress={playProgress}
-                setPlayProgress={setPlayProgress}
-              />
-              <div className={styles['main__centerblock']}>
+        <Provider store={store}>
+          <Wrapper>
+            <div className="container">
+              <main className="main">
+                <Nav
+                /*startPlay={startPlay}
+                  setStartPlay={setStartPlay}
+                  playProgress={playProgress}
+                  setPlayProgress={setPlayProgress}*/
+                />
+                <div className={styles['main__centerblock']}>
+                  <Provider store={store}>
+                    <CenterBlock />
+                    <PlaylistForFavorites
+                      startPlay={startPlay}
+                      setStartPlay={setStartPlay}
+                      playProgress={playProgress}
+                      setPlayProgress={setPlayProgress}
+                    />
+                  </Provider>
+                </div>
                 <Provider store={store}>
-                  <CenterBlock />
-                  <PlaylistForFavorites
-                    startPlay={startPlay}
-                    setStartPlay={setStartPlay}
-                  />
+                  <SideBar />
                 </Provider>
-              </div>
-              <SideBar />
-            </main>
-
-            <Footer />
-          </div>
-        </div>
+              </main>
+              <Footer />
+            </div>
+          </Wrapper>
+        </Provider>
       </ContextTheme.Provider>
     </>
   )

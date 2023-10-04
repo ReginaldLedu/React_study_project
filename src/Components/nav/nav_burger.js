@@ -3,7 +3,9 @@ import MenuNav from './menuNav'
 import styles from './navBurger.module.css'
 import { useThemeContext } from '../main/main'
 
-export const Nav = (/*eslint-disable*/ { startPlay, setStartPlay }) => {
+export const Nav = (
+  /*eslint-disable*/ { startPlay, setStartPlay, setPlayProgress, playProgress }
+) => {
   const menuState = useState(false)
   const menu = menuState[0]
   const menuHide = menuState[1]
@@ -39,7 +41,14 @@ export const Nav = (/*eslint-disable*/ { startPlay, setStartPlay }) => {
         ></span>
       </div>
 
-      {menu && <MenuNav startPlay={startPlay} setStartPlay={setStartPlay} />}
+      {menu && (
+        <MenuNav
+          startPlay={startPlay}
+          setStartPlay={setStartPlay}
+          playProgress={playProgress}
+          setPlayProgress={setPlayProgress}
+        />
+      )}
     </nav>
   )
 }

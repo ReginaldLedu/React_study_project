@@ -5,21 +5,35 @@ import { store } from './Components/store/reducers/index'
 import styles from './Components/bar/bar.module.css'
 
 export const Layout = (
-  /*eslint-disable*/ { startPlay, setStartPlay, setPlayProgress, playProgress }
+  /*eslint-disable*/ {
+    startPlay,
+    setStartPlay,
+    setPlayProgress,
+    playProgress,
+    position,
+  }
 ) => {
   return (
     <>
-      <Outlet />
-      <div className={styles['bar']}>
+      <Provider store={store}>
+        <Outlet
+        />
+      </Provider>
+      {position.name !== undefined ? (
         <Provider store={store}>
-          <Bar
-            startPlay={startPlay}
-            setStartPlay={setStartPlay}
-            playProgress={playProgress}
-            setPlayProgress={setPlayProgress}
-          ></Bar>
+          <div className={styles['bar']}>
+            <Bar
+              startPlay={startPlay}
+              setStartPlay={setStartPlay}
+              playProgress={playProgress}
+              setPlayProgress={setPlayProgress}
+              position={position}
+            ></Bar>
+          </div>
         </Provider>
-      </div>
+      ) : (
+        ' '
+      )}
     </>
   )
 }

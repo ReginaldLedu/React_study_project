@@ -3,10 +3,11 @@ import styles from './login.module.css'
 import { useState, useRef, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import {} from 'react'
-
 import { fetchLogin, fetchaAccessToken } from '../store/reducers/async'
 
-function Login() {
+
+export default function Login() {
+  
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const [loginChange, setLoginChange] = useState(null)
@@ -27,13 +28,19 @@ function Login() {
     switch (event.target.name) {
       case 'login':
         setLoginChange(logRef.current.value)
-        console.log(loginChange)
         break
       case 'password':
         setPasswordChange(passRef.current.value)
-        console.log(passwordChange)
         break
     }
+  }
+  const logPassObject = {}
+  async function log(loginChange, passwordChange) {
+    logPassObject.log = loginChange
+    logPassObject.pass = passwordChange
+    dispatch(fetchLogin(loginChange, passwordChange))
+    dispatch(fetchaAccessToken(loginChange, passwordChange))
+   
   }
 
   return (
@@ -47,7 +54,7 @@ function Login() {
         type="text"
         className={styles['login__name']}
         placeholder="Логин"
-        onBlur={(event) => blurHandler(event)}
+        onChange={(event) => blurHandler(event)}
       ></input>
       <input
         ref={passRef}
@@ -55,16 +62,15 @@ function Login() {
         type="text"
         className={styles['login__password']}
         placeholder="Пароль"
-        onBlur={(event) => blurHandler(event)}
+        onChange={(event) => blurHandler(event)}
       ></input>
       <button
         className={styles['login__button']}
         disabled={!formValid}
         onClick={() => {
-          dispatch(fetchLogin(loginChange, passwordChange))
-          dispatch(fetchaAccessToken(loginChange, passwordChange))
-          console.log(loginChange, passwordChange)
-          navigate('main', { replace: false })
+          log(loginChange, passwordChange).then(
+            navigate('main', { replace: false })
+          )
         }}
       >
         Войти
@@ -80,4 +86,3 @@ function Login() {
     </div>
   )
 }
-export default Login

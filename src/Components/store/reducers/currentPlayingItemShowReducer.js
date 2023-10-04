@@ -1,20 +1,22 @@
-import { configureStore } from '@reduxjs/toolkit'
+//import { configureStore } from '@reduxjs/toolkit'
 
-export const defaultState = {
-  currentPosition: -1,
+import { createSlice } from '@reduxjs/toolkit'
+
+const initialState = {
+  initialState: {},
 }
-export const currentPlayShowReducer = (state = defaultState, action) => {
-  switch (action.type) {
-    case 'forward':
-      return { ...state, currentPosition: state.currentPosition + 1 }
-    case 'back':
-      return { ...state, currentPosition: state.currentPosition - 1 }
-    case 'default':
-      return { ...state, currentPosition: 0 }
-    case 'samePlace':
-      return { ...state, currentPosition: state.currentPosition }
-    default:
-      return state
-  }
-}
-export const store = configureStore({ reducer: currentPlayShowReducer })
+export const currentPlaySlice = createSlice({
+  name: 'currentPlayingToolkit',
+  initialState,
+  reducers: {
+    setCurrentPlay: (state, action) => {
+      //state.initialState = action.payload.name
+      state.initialState = action.payload
+    },
+    setCurrentPlayStop: (state) => {
+      state.initialState = 'stop'
+    },
+  },
+})
+export const { setCurrentPlay } = currentPlaySlice.actions
+export default currentPlaySlice.reducer

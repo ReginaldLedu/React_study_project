@@ -9,45 +9,70 @@ import { Layout } from './layout'
 import { useState } from 'react'
 import { Provider } from 'react-redux'
 import { store } from './Components/store/reducers/index'
-
+import { useSelector } from 'react-redux'
 function App() {
   const [startPlay, setStartPlay] = useState({ startPlay: false })
-  const [playProgress, setPlayProgress] = useState(0)
-
+  //const [playProgress, setPlayProgress] = useState(0)
+  const [playProgress, setPlayProgress] = useState({ playProgress: 0 })
+  const position = useSelector(
+    (state) => state.currentPlayingToolkit.initialState
+  )
   return (
     <BrowserRouter>
       <Routes>
         <Route
           path=""
           element={
-            <Layout
-              startPlay={startPlay}
-              setStartPlay={setStartPlay}
-              playProgress={playProgress}
-              setPlayProgress={setPlayProgress}
-            ></Layout>
+            <Provider store={store}>
+              <Layout
+                startPlay={startPlay}
+                setStartPlay={setStartPlay}
+                playProgress={playProgress}
+                setPlayProgress={setPlayProgress}
+                position={position}
+              ></Layout>
+            </Provider>
           }
         >
           <Route
             path="main"
             element={
-              <Main
-                startPlay={startPlay}
-                setStartPlay={setStartPlay}
-                playProgress={playProgress}
-                setPlayProgress={setPlayProgress}
-              ></Main>
+              <Provider store={store}>
+                <Main
+                  startPlay={startPlay}
+                  setStartPlay={setStartPlay}
+                  playProgress={playProgress}
+                  setPlayProgress={setPlayProgress}
+                />
+              </Provider>
             }
           />
           <Route
             path="trackList/:id"
             element={
-              <TracklistChosen
-                startPlay={startPlay}
-                setStartPlay={setStartPlay}
-                playProgress={playProgress}
-                setPlayProgress={setPlayProgress}
-              />
+              <Provider store={store}>
+                <TracklistChosen
+                  startPlay={startPlay}
+                  setStartPlay={setStartPlay}
+                  playProgress={playProgress}
+                  setPlayProgress={setPlayProgress}
+                />
+              </Provider>
+            }
+          />
+
+          <Route
+            path="favorites"
+            element={
+              <Provider store={store}>
+                <Favorites
+                  startPlay={startPlay}
+                  setStartPlay={setStartPlay}
+                  playProgress={playProgress}
+                  setPlayProgress={setPlayProgress}
+                  position={position}
+                />
+              </Provider>
             }
           />
         </Route>
@@ -63,7 +88,7 @@ function App() {
         />
 
         <Route path="registration" element={<Registration />} />
-        <Route
+        {/*<Route
           path=""
           element={
             <Layout
@@ -71,12 +96,10 @@ function App() {
               setStartPlay={setStartPlay}
               playProgress={playProgress}
               setPlayProgress={setPlayProgress}
+              position={position}
             ></Layout>
           }
-        >
-          <Route path="favorites" element={<Favorites />} />
-        </Route>
-
+			></Route>*/}
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>

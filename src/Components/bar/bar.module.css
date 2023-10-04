@@ -8,6 +8,12 @@
   font-weight: 400;
 }
 
+.liked {
+  fill: #b882ff;
+}
+.disliked {
+  fill: black;
+}
 .bar {
   position: absolute;
   bottom: 0;

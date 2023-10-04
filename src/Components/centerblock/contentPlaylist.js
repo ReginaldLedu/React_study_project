@@ -1,49 +1,197 @@
 import styles from './centerblock.module.css'
-import { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useThemeContext } from '../main/main'
 import { NavLink } from 'react-router-dom'
-import { fetchTracks } from '../store/reducers/async'
 import { addToFavorites } from '../store/reducers/async'
+import { setCurrentPlay } from '../store/reducers/currentPlayingItemShowReducer'
+import { fetchRemoveFromFavorites } from '../store/reducers/async'
+//import { fetchGetAllFavorites } from '../store/reducers/async'
+/*import {
+  allFavoritesDis,
+  allFavoritesLike,
+} from '../store/reducers/favoriteTracksFromAPI'*/
+import { allFavoritesLike } from '../store/reducers/favoriteTracksFromAPI'
+import { allFavoritesDis } from '../store/reducers/favoriteTracksFromAPI'
+import { useEffect } from 'react'
+//import { renderTracks } from '../store/reducers/renderedTracks'
+import { shuffled } from '../store/reducers/renderedTracks'
 
 export function Playlist() {
+  const tokens = useSelector((state) => state.tokenReducer.defaultTokens)
+  console.log(tokens)
+  /*const tracks = useSelector((state) => state.allTracksToolkit.initialState)*/
+  const renderedTracks = useSelector(
+    (state) => state.renderedTracksToolkit.initialState
+  )
+  console.log(renderedTracks)
+
   const dispatch = useDispatch()
+  const refreshenedToken = useSelector(
+    (state) => state.refreshTokenToolkit.initialState
+  )
+  console.log(refreshenedToken)
+
   const { theme } = useThemeContext()
   const position = useSelector(
-    (state) => state.currentPlayShowReducer.currentPosition
+    (state) => state.currentPlayingToolkit.initialState
   )
+
   const pulsation = useSelector((state) => state.pulsationToolkit.pulsation)
   const range = useSelector((state) => state.shuffleReducer.defaultRange)
-  const tracks = useSelector((state) => state.tracksReducer.defaultTracks)
-  const tokens = useSelector((state) => state.tokenReducer.defaultTokens)
 
   const allFavorites = useSelector(
-    (state) => state.AllFavoriteTracksReducer.defaultAllFavoriteTracks
+    (state) => state.allFavoritesToolkit.initialState
   )
-  console.log(allFavorites)
 
-  function shuffled(arr) {
-    for (let i = arr.length - 1; i > 0; i--) {
-      let j = Math.floor(Math.random() * (i + 1))
-      ;[arr[i], arr[j]] = [arr[j], arr[i]]
-    }
-  }
+  /* function shuffle(array) {
+    array.sort(() => Math.random() - 0.5)
+  }*/
 
-  useEffect(() => dispatch(fetchTracks()), [])
+  /*const originalRange = [
+    0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16,
 
-  const originalRange = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
   const forShuffled = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-  shuffled(forShuffled)
+  shuffle(forShuffled)  ]*/
 
-  const shuffledRange = []
+  useEffect(() => {
+    dispatch(shuffled(renderedTracks))
+  }, [range])
 
-  for (let i = 0; i < forShuffled.length; i++) {
-    shuffledRange.push(forShuffled[forShuffled[i]])
+  const setCurrentPlayTrack = (track) => {
+    dispatch(setCurrentPlay(track))
+    console.log(position)
   }
-
   return (
     <div className={styles['content__playlist']}>
-      {tracks.length > 0 ? (
+      {renderedTracks.length > 0 ? (
+        renderedTracks.map((track) => (
+          <div
+            key={renderedTracks.indexOf(track)}
+            className={styles['playlist__item']}
+          >
+            <div className={styles['playlist__track']}>
+              <div
+                className={styles['track__title']}
+                onClick={() => setCurrentPlayTrack(track)}
+              >
+                {position.name === track.name ? (
+                  <div className={styles[`${pulsation}`]}></div>
+                ) : (
+                  ' '
+                )}
+                <div className={styles['track__title-image']}>
+                  <svg className={styles['track__title-svg']}>
+                    <use xlinkHref="img/icon/sprite.svg#icon-note"></use>
+                  </svg>
+                </div>
+                <div className={styles['track__title-text']}>
+                  <NavLink
+                    className={styles['track__title-link']}
+                    style={{ color: theme.color }}
+                    to="/main"
+                  >
+                    {track.name}
+                    <span
+                      className={styles['track__title-span']}
+                      style={{ color: theme.trackSpan }}
+                    ></span>
+                  </NavLink>
+                </div>
+              </div>
+              <div className={styles['track__author']}>
+                <NavLink
+                  className={styles['track__author-link']}
+                  style={{ color: theme.color }}
+                  to="/main"
+                >
+                  {track.author}
+                </NavLink>
+              </div>
+              <div className={styles['track__album']}>
+                <a className={styles['track__album-link']}>{track.album}</a>
+              </div>
+              {allFavorites.find((item) => item.id === track.id) !==
+              undefined ? (
+                <div
+                  className={styles['track__time']}
+                  onClick={(event) => {
+                    //dispatch(fetchGetAllFavorites(`Bearer ${tokens.access}`))
+                    event.target.classList.toggle(styles['disliked'])
+                    dispatch(
+                      fetchRemoveFromFavorites(
+                        track.id,
+                        `Bearer ${tokens.access}`
+                      )
+                    )
+                    dispatch(allFavoritesDis(track.id))
+                    console.log(allFavorites)
+                    const arr = allFavorites
+                    const arr2 = arr.filter(function (item) {
+                      return item.id !== track.id
+                    })
+                    console.log(arr2)
+                  }}
+                >
+                  <svg
+                    className={styles['track__time-svg']}
+                    width="16"
+                    height="14"
+                    viewBox="0 0 16 14"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M8.02203 12.7031C13.9025 9.20312 16.9678 3.91234 13.6132 1.47046C11.413 -0.13111 8.95392 1.14488 8.02203 1.95884H8.00052H8.00046H7.97895C7.04706 1.14488 4.58794 -0.13111 2.38775 1.47046C-0.966814 3.91234 2.09846 9.20312 7.97895 12.7031H8.00046H8.00052H8.02203Z"
+                      fill="#B672FF"
+                    />
+                    <path
+                      d="M8.00046 1.95884H8.02203C8.95392 1.14488 11.413 -0.13111 13.6132 1.47046C16.9678 3.91234 13.9025 9.20312 8.02203 12.7031H8.00046M8.00052 1.95884H7.97895C7.04706 1.14488 4.58794 -0.13111 2.38775 1.47046C-0.966814 3.91234 2.09846 9.20312 7.97895 12.7031H8.00052"
+                      stroke="#B672FF"
+                    />
+                  </svg>
+                  <span className={styles['track__time-text']}>4:44</span>
+                </div>
+              ) : (
+                <div
+                  className={styles['track__time']}
+                  onClick={(event) => {
+                    //dispatch(fetchGetAllFavorites(`Bearer ${tokens.access}`))
+                    event.target.classList.toggle(styles['liked'])
+                    dispatch(
+                      addToFavorites(track.id, `Bearer ${tokens.access}`)
+                    )
+
+                    console.log(track)
+                    dispatch(allFavoritesLike(track))
+                    console.log(allFavorites)
+                  }}
+                >
+                  <svg
+                    className={styles['track__time-svg']}
+                    width="16"
+                    height="14"
+                    viewBox="0 0 16 14"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M8.00046 1.95884H8.02203C8.95392 1.14488 11.413 -0.13111 13.6132 1.47046C16.9678 3.91234 13.9025 9.20312 8.02203 12.7031H8.00046M8.00052 1.95884H7.97895C7.04706 1.14488 4.58794 -0.13111 2.38775 1.47046C-0.966814 3.91234 2.09846 9.20312 7.97895 12.7031H8.00052"
+                      stroke="#ACACAC"
+                    />
+                  </svg>
+                  <span className={styles['track__time-text']}>4:44</span>
+                </div>
+              )}
+            </div>
+          </div>
+        ))
+      ) : (
+        <></>
+      )}
+    </div>
+  )
+}
+/*{renderedTracks.length > 0 ? (
         range === 0 ? (
           originalRange.map((track) => (
             <div
@@ -51,8 +199,16 @@ export function Playlist() {
               className={styles['playlist__item']}
             >
               <div className={styles['playlist__track']}>
-                <div className={styles['track__title']}>
-                  {position === originalRange.indexOf(track) ? (
+                <div
+                  className={styles['track__title']}
+                  onClick={() =>
+                    setCurrentPlayTrack(
+                      renderedTracks[originalRange.indexOf(track)]
+                    )
+                  }
+                >
+                  {position.name ===
+                  renderedTracks[originalRange.indexOf(track)].name ? (
                     <div className={styles[`${pulsation}`]}></div>
                   ) : (
                     ' '
@@ -68,7 +224,7 @@ export function Playlist() {
                       style={{ color: theme.color }}
                       to="/main"
                     >
-                      {tracks[originalRange.indexOf(track)].name}
+                      {renderedTracks[originalRange.indexOf(track)].name}
                       <span
                         className={styles['track__title-span']}
                         style={{ color: theme.trackSpan }}
@@ -82,731 +238,219 @@ export function Playlist() {
                     style={{ color: theme.color }}
                     to="/main"
                   >
-                    {tracks[originalRange.indexOf(track)].author}
+                    {renderedTracks[originalRange.indexOf(track)].author}
                   </NavLink>
                 </div>
                 <div className={styles['track__album']}>
                   <a className={styles['track__album-link']}>
-                    {tracks[originalRange.indexOf(track)].album}
+                    {renderedTracks[originalRange.indexOf(track)].album}
                   </a>
                 </div>
-                <div className={styles['track__time']}>
-                  <svg
-                    className={styles['track__time-svg']}
-                    alt="time"
+                {allFavorites.find(
+                  (item) =>
+                    item.id === renderedTracks[originalRange.indexOf(track)].id
+                ) !== undefined ? (
+                  <div
+                    className={styles['track__time']}
                     onClick={(event) => {
-                      event.target.classList.toggle(styles['liked'])
+                      //dispatch(fetchGetAllFavorites(`Bearer ${tokens.access}`))
+                      event.target.classList.toggle(styles['disliked'])
                       dispatch(
-                        addToFavorites(
-                          tracks[originalRange[track]].id,
+                        fetchRemoveFromFavorites(
+                          renderedTracks[originalRange[track]].id,
                           `Bearer ${tokens.access}`
                         )
                       )
+                      dispatch(
+                        allFavoritesDis(renderedTracks[originalRange[track]].id)
+                      )
                     }}
                   >
-                    <use xlinkHref="img/icon/sprite.svg#icon-like"></use>
-                  </svg>
-                  <span className={styles['track__time-text']}>4:44</span>
-                </div>
-              </div>
-            </div>
-          ))
-        ) : (
-          shuffledRange.map((track) => (
-            <div
-              key={shuffledRange.indexOf(track)}
-              className={styles['playlist__item']}
-            >
-              <div className={styles['playlist__track']}>
-                <div className={styles['track__title']}>
-                  {position === shuffledRange.indexOf(track) ? (
-                    <div className={styles[`${pulsation}`]}></div>
-                  ) : (
-                    ' '
-                  )}
-                  <div className={styles['track__title-image']}>
-                    <svg className={styles['track__title-svg']}>
-                      <use xlinkHref="img/icon/sprite.svg#icon-note"></use>
-                    </svg>
-                  </div>
-                  <div className={styles['track__title-text']}>
-                    <NavLink
-                      className={styles['track__title-link']}
-                      style={{ color: theme.color }}
-                      to="/main"
+                    <svg
+                      className={styles['track__time-svg']}
+                      width="16"
+                      height="14"
+                      viewBox="0 0 16 14"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
                     >
-                      {tracks[shuffledRange[track]].name}
-                      <span
-                        className={styles['track__title-span']}
-                        style={{ color: theme.trackSpan }}
-                      ></span>
-                    </NavLink>
+                      <path
+                        d="M8.02203 12.7031C13.9025 9.20312 16.9678 3.91234 13.6132 1.47046C11.413 -0.13111 8.95392 1.14488 8.02203 1.95884H8.00052H8.00046H7.97895C7.04706 1.14488 4.58794 -0.13111 2.38775 1.47046C-0.966814 3.91234 2.09846 9.20312 7.97895 12.7031H8.00046H8.00052H8.02203Z"
+                        fill="#B672FF"
+                      />
+                      <path
+                        d="M8.00046 1.95884H8.02203C8.95392 1.14488 11.413 -0.13111 13.6132 1.47046C16.9678 3.91234 13.9025 9.20312 8.02203 12.7031H8.00046M8.00052 1.95884H7.97895C7.04706 1.14488 4.58794 -0.13111 2.38775 1.47046C-0.966814 3.91234 2.09846 9.20312 7.97895 12.7031H8.00052"
+                        stroke="#B672FF"
+                      />
+                    </svg>
+                    <span className={styles['track__time-text']}>4:44</span>
                   </div>
-                </div>
-                <div className={styles['track__author']}>
-                  <NavLink
-                    className={styles['track__author-link']}
-                    style={{ color: theme.color }}
-                    to="/main"
-                  >
-                    {tracks[shuffledRange[track]].author}
-                  </NavLink>
-                </div>
-                <div className={styles['track__album']}>
-                  <a className={styles['track__album-link']}>
-                    {tracks[shuffledRange[track]].album}
-                  </a>
-                </div>
-                <div className={styles['track__time']}>
-                  <svg
-                    className={styles['track__time-svg']}
-                    alt="time"
+                ) : (
+                  <div
+                    className={styles['track__time']}
                     onClick={(event) => {
-                      event.target.classList.toggle(styles['liked'])
-                      dispatch(
-                        addToFavorites(
-                          tracks[shuffledRange[track]].id,
-                          `Bearer ${tokens.access}`
-                        )
-                      )
-                    }}
-                  >
-                    <use xlinkHref="img/icon/sprite.svg#icon-like"></use>
-                  </svg>
-                  <span className={styles['track__time-text']}>4:44</span>
-                </div>
-              </div>
-            </div>
-          ))
-        )
-      ) : (
-        <div>треки отсутствуют</div>
-      )}
-    </div>
-  )
-}
+                      dispatch(fetchGetAllFavorites(`Bearer ${tokens.access}`))
+							event.target.classList.toggle(styles['liked'])
+							dispatch(
+							  addToFavorites(
+								 renderedTracks[originalRange[track]].id,
+								 `Bearer ${tokens.access}`
+							  )
+							)
+							dispatch(
+							  allFavoritesLike(renderedTracks[originalRange[track]])
+							)
+						 }}
+					  >
+						 <svg
+							className={styles['track__time-svg']}
+							width="16"
+							height="14"
+							viewBox="0 0 16 14"
+							fill="none"
+							xmlns="http://www.w3.org/2000/svg"
+						 >
+							<path
+							  d="M8.00046 1.95884H8.02203C8.95392 1.14488 11.413 -0.13111 13.6132 1.47046C16.9678 3.91234 13.9025 9.20312 8.02203 12.7031H8.00046M8.00052 1.95884H7.97895C7.04706 1.14488 4.58794 -0.13111 2.38775 1.47046C-0.966814 3.91234 2.09846 9.20312 7.97895 12.7031H8.00052"
+							  stroke="#ACACAC"
+							/>
+						 </svg>
+						 <span className={styles['track__time-text']}>4:44</span>
+					  </div>
+					)}
+				 </div>
+			  </div>
+			))
+		 ) : (
+			shuffledRange.map((track) => (
+			  <div
+				 key={shuffledRange.indexOf(track)}
+				 className={styles['playlist__item']}
+			  >
+				 <div className={styles['playlist__track']}>
+					<div
+					  className={styles['track__title']}
+					  onClick={() =>
+						 setCurrentPlayTrack(
+							renderedTracks[shuffledRange.indexOf(track)]
+						 )
+					  }
+					>
+					  {position ===
+					  renderedTracks[shuffledRange.indexOf(track)].name ? (
+						 <div className={styles[`${pulsation}`]}></div>
+					  ) : (
+						 ' '
+					  )}
+					  <div className={styles['track__title-image']}>
+						 <svg className={styles['track__title-svg']}>
+							<use xlinkHref="img/icon/sprite.svg#icon-note"></use>
+						 </svg>
+					  </div>
+					  <div className={styles['track__title-text']}>
+						 <NavLink
+							className={styles['track__title-link']}
+							style={{ color: theme.color }}
+							to="/main"
+						 >
+							{renderedTracks[shuffledRange[track]].name}
+							<span
+							  className={styles['track__title-span']}
+							  style={{ color: theme.trackSpan }}
+							></span>
+						 </NavLink>
+					  </div>
+					</div>
+					<div className={styles['track__author']}>
+					  <NavLink
+						 className={styles['track__author-link']}
+						 style={{ color: theme.color }}
+						 to="/main"
+					  >
+						 {renderedTracks[shuffledRange[track]].author}
+					  </NavLink>
+					</div>
+					<div className={styles['track__album']}>
+					  <a className={styles['track__album-link']}>
+						 {renderedTracks[shuffledRange[track]].album}
+					  </a>
+					</div>
 
-/* <>
-	<div className={styles['playlist__item']}>
-	  <div className={styles['playlist__track']}>
-		 <div className={styles['track__title']}>
-			{position === 0 ? (
-			  <div className={styles[`${pulsation}`]}></div>
-			) : (
-			  ' '
-			)}
-			<div className={styles['track__title-image']}>
-			  <svg className={styles['track__title-svg']}>
-				 <use xlinkHref="img/icon/sprite.svg#icon-note"></use>
-			  </svg>
-			</div>
-			<div className={styles['track__title-text']}>
-			  <NavLink
-				 className={styles['track__title-link']}
-				 style={{ color: theme.color }}
-				 to="/main"
-			  >
-				 {range === 0
-					? tracks[originalRange[0]].name
-					: tracks[shuffledRange[0]].name}
-				 <span
-					className={styles['track__title-span']}
-					style={{ color: theme.trackSpan }}
-				 ></span>
-			  </NavLink>
-			</div>
-		 </div>
-		 <div className={styles['track__author']}>
-			{range === 0 ? (
-			  <NavLink
-				 className={styles['track__author-link']}
-				 style={{ color: theme.color }}
-				 to="/main"
-			  >
-				 {tracks[originalRange[0]].author}
-			  </NavLink>
-			) : (
-			  <NavLink
-				 className={styles['track__author-link']}
-				 style={{ color: theme.color }}
-				 to="/main"
-			  >
-				 {tracks[shuffledRange[0]].author}
-			  </NavLink>
-			)}
-		 </div>
-		 <div className={styles['track__album']}>
-			<a className={styles['track__album-link']}>
-			  {range === 0
-				 ? tracks[originalRange[0]].album
-				 : tracks[shuffledRange[0]].album}
-			</a>
-		 </div>
-		 <div className={styles['track__time']}>
-			<svg
-			  className={styles['track__time-svg']}
-			  alt="time"
-			  onClick={() => like()}
-			>
-			  <use xlinkHref="img/icon/sprite.svg#icon-like"></use>
-			</svg>
-			<span className={styles['track__time-text']}>4:44</span>
-		 </div>
-	  </div>
-	</div>
-	<div className={styles['playlist__item']}>
-	  <div className={styles['playlist__track']}>
-		 <div className={styles['track__title']}>
-			{position === 1 ? (
-			  <div className={styles[`${pulsation}`]}></div>
-			) : (
-			  ' '
-			)}
-			<div className={styles['track__title-image']}>
-			  <svg className={styles['track__title-svg']}>
-				 <use xlinkHref="img/icon/sprite.svg#icon-note"></use>
-			  </svg>
-			</div>
-			<div className={styles['track__title-text']}>
-			  <NavLink
-				 className={styles['track__title-link']}
-				 style={{ color: theme.color }}
-				 to="/main"
-			  >
-				 {range === 0
-					? tracks[originalRange[1]].name
-					: tracks[shuffledRange[1]].name}
-				 <span
-					className={styles['track__title-span']}
-					style={{ color: theme.trackSpan }}
-				 ></span>
-			  </NavLink>
-			</div>
-		 </div>
-		 <div className={styles['track__author']}>
-			<NavLink
-			  className={styles['track__author-link']}
-			  style={{ color: theme.color }}
-			  to="/main"
-			>
-			  {range === 0
-				 ? tracks[originalRange[1]].author
-				 : tracks[shuffledRange[1]].author}
-			</NavLink>
-		 </div>
-		 <div className={styles['track__album']}>
-			<a className={styles['track__album-link']}>
-			  {' '}
-			  {range === 0
-				 ? tracks[originalRange[1]].album
-				 : tracks[shuffledRange[1]].album}
-			</a>
-		 </div>
-		 <div className={styles['track__time']}>
-			<svg
-			  className={styles['track__time-svg']}
-			  alt="time"
-			  onClick={() => like()}
-			>
-			  <use xlinkHref="img/icon/sprite.svg#icon-like"></use>
-			</svg>
-			<span className={styles['track__time-text']}>4:44</span>
-		 </div>
-	  </div>
-	</div>
-	<div className={styles['playlist__item']}>
-	  <div className={styles['playlist__track']}>
-		 <div className={styles['track__title']}>
-			{position === 2 ? (
-			  <div className={styles[`${pulsation}`]}></div>
-			) : (
-			  ' '
-			)}
-			<div className={styles['track__title-image']}>
-			  <svg className={styles['track__title-svg']}>
-				 <use xlinkHref="img/icon/sprite.svg#icon-note"></use>
-			  </svg>
-			</div>
-			<div className={styles['track__title-text']}>
-			  <NavLink
-				 className={styles['track__title-link']}
-				 style={{ color: theme.color }}
-				 to="/main"
-			  >
-				 {range === 0
-					? tracks[originalRange[2]].name
-					: tracks[shuffledRange[2]].name}
-				 <span
-					className={styles['track__title-span']}
-					style={{ color: theme.trackSpan }}
-				 ></span>
-			  </NavLink>
-			</div>
-		 </div>
-		 <div className={styles['track__author']}>
-			<NavLink
-			  className={styles['track__author-link']}
-			  style={{ color: theme.color }}
-			  to="/main"
-			>
-			  {range === 0
-				 ? tracks[originalRange[2]].author
-				 : tracks[shuffledRange[2]].author}
-			</NavLink>
-		 </div>
-		 <div className={styles['track__album']}>
-			<a className={styles['track__album-link']}>
-			  {range === 0
-				 ? tracks[originalRange[2]].album
-				 : tracks[shuffledRange[2]].album}
-			</a>
-		 </div>
-		 <div className={styles['track__time']}>
-			<svg className={styles['track__time-svg']} alt="time">
-			  <use xlinkHref="img/icon/sprite.svg#icon-like"></use>
-			</svg>
-			<span className={styles['track__time-text']}>4:44</span>
-		 </div>
-	  </div>
-	</div>
-	<div className={styles['playlist__item']}>
-	  <div className={styles['playlist__track']}>
-		 <div className={styles['track__title']}>
-			{position === 3 ? (
-			  <div className={styles[`${pulsation}`]}></div>
-			) : (
-			  ' '
-			)}
-			<div className={styles['track__title-image']}>
-			  <svg className={styles['track__title-svg']}>
-				 <use xlinkHref="img/icon/sprite.svg#icon-note"></use>
-			  </svg>
-			</div>
-			<div className={styles['track__title-text']}>
-			  <NavLink
-				 className={styles['track__title-link']}
-				 style={{ color: theme.color }}
-				 to="/main"
-			  >
-				 {range === 0
-					? tracks[originalRange[3]].name
-					: tracks[shuffledRange[3]].name}
-				 <span
-					className={styles['track__title-span']}
-					style={{ color: theme.trackSpan }}
-				 ></span>
-			  </NavLink>
-			</div>
-		 </div>
-		 <div className={styles['track__author']}>
-			<NavLink
-			  className={styles['track__author-link']}
-			  style={{ color: theme.color }}
-			  to="/main"
-			>
-			  {range === 0
-				 ? tracks[originalRange[3]].author
-				 : tracks[shuffledRange[3]].author}
-			</NavLink>
-		 </div>
-		 <div className={styles['track__album']}>
-			<a className={styles['track__album-link']}>
-			  {range === 0
-				 ? tracks[originalRange[3]].album
-				 : tracks[shuffledRange[3]].album}
-			</a>
-		 </div>
-		 <div className={styles['track__time']}>
-			<svg className={styles['track__time-svg']} alt="time">
-			  <use xlinkHref="img/icon/sprite.svg#icon-like"></use>
-			</svg>
-			<span className={styles['track__time-text']}>4:44</span>
-		 </div>
-	  </div>
-	</div>
-	<div className={styles['playlist__item']}>
-	  <div className={styles['playlist__track']}>
-		 <div className={styles['track__title']}>
-			{position === 4 ? (
-			  <div className={styles[`${pulsation}`]}></div>
-			) : (
-			  ' '
-			)}
-			<div className={styles['track__title-image']}>
-			  <svg className={styles['track__title-svg']}>
-				 <use xlinkHref="img/icon/sprite.svg#icon-note"></use>
-			  </svg>
-			</div>
-			<div className={styles['track__title-text']}>
-			  <NavLink
-				 className={styles['track__title-link']}
-				 style={{ color: theme.color }}
-				 to="/main"
-			  >
-				 {range === 0
-					? tracks[originalRange[4]].name
-					: tracks[shuffledRange[4]].name}
-				 <span
-					className={styles['track__title-span']}
-					style={{ color: theme.trackSpan }}
-				 ></span>
-			  </NavLink>
-			</div>
-		 </div>
-		 <div className={styles['track__author']}>
-			<NavLink
-			  className={styles['track__author-link']}
-			  style={{ color: theme.color }}
-			  to="/main"
-			>
-			  {range === 0
-				 ? tracks[originalRange[4]].author
-				 : tracks[shuffledRange[4]].author}
-			</NavLink>
-		 </div>
-		 <div className={styles['track__album']}>
-			<a className={styles['track__album-link']}>
-			  {range === 0
-				 ? tracks[originalRange[4]].album
-				 : tracks[shuffledRange[4]].album}
-			</a>
-		 </div>
-		 <div className={styles['track__time']}>
-			<svg className={styles['track__time-svg']} alt="time">
-			  <use xlinkHref="img/icon/sprite.svg#icon-like"></use>
-			</svg>
-			<span className={styles['track__time-text']}>4:44</span>
-		 </div>
-	  </div>
-	</div>
-	<div className={styles['playlist__item']}>
-	  <div className={styles['playlist__track']}>
-		 <div className={styles['track__title']}>
-			{position === 5 ? (
-			  <div className={styles[`${pulsation}`]}></div>
-			) : (
-			  ' '
-			)}
-			<div className={styles['track__title-image']}>
-			  <svg className={styles['track__title-svg']}>
-				 <use xlinkHref="img/icon/sprite.svg#icon-note"></use>
-			  </svg>
-			</div>
-			<div className={styles['track__title-text']}>
-			  <NavLink
-				 className={styles['track__title-link']}
-				 style={{ color: theme.color }}
-				 to="/main"
-			  >
-				 {range === 0
-					? tracks[originalRange[5]].name
-					: tracks[shuffledRange[5]].name}
-				 <span
-					className={styles['track__title-span']}
-					style={{ color: theme.trackSpan }}
-				 ></span>
-			  </NavLink>
-			</div>
-		 </div>
-		 <div className={styles['track__author']}>
-			<NavLink
-			  className={styles['track__author-link']}
-			  style={{ color: theme.color }}
-			  to="/main"
-			>
-			  {range === 0
-				 ? tracks[originalRange[5]].author
-				 : tracks[shuffledRange[5]].author}
-			</NavLink>
-		 </div>
-		 <div className={styles['track__album']}>
-			<a className={styles['track__album-link']}>
-			  {range === 0
-				 ? tracks[originalRange[5]].album
-				 : tracks[shuffledRange[5]].album}
-			</a>
-		 </div>
-		 <div className={styles['track__time']}>
-			<svg className={styles['track__time-svg']} alt="time">
-			  <use xlinkHref="img/icon/sprite.svg#icon-like"></use>
-			</svg>
-			<span className={styles['track__time-text']}>4:44</span>
-		 </div>
-	  </div>
-	</div>
-	<div className={styles['playlist__item']}>
-	  <div className={styles['playlist__track']}>
-		 <div className={styles['track__title']}>
-			{position === 6 ? (
-			  <div className={styles[`${pulsation}`]}></div>
-			) : (
-			  ' '
-			)}
-			<div className={styles['track__title-image']}>
-			  <svg className={styles['track__title-svg']}>
-				 <use xlinkHref="img/icon/sprite.svg#icon-note"></use>
-			  </svg>
-			</div>
-			<div className={styles['track__title-text']}>
-			  <NavLink
-				 className={styles['track__title-link']}
-				 style={{ color: theme.color }}
-				 to="/main"
-			  >
-				 {range === 0
-					? tracks[originalRange[6]].name
-					: tracks[shuffledRange[6]].name}
-				 <span
-					className={styles['track__title-span']}
-					style={{ color: theme.trackSpan }}
-				 ></span>
-			  </NavLink>
-			</div>
-		 </div>
-		 <div className={styles['track__author']}>
-			<NavLink
-			  className={styles['track__author-link']}
-			  style={{ color: theme.color }}
-			  to="/main"
-			>
-			  {range === 0
-				 ? tracks[originalRange[6]].author
-				 : tracks[shuffledRange[6]].author}
-			</NavLink>
-		 </div>
-		 <div className={styles['track__album']}>
-			<a className={styles['track__album-link']}>
-			  {range === 0
-				 ? tracks[originalRange[6]].album
-				 : tracks[shuffledRange[6]].album}
-			</a>
-		 </div>
-		 <div className={styles['track__time']}>
-			<svg className={styles['track__time-svg']} alt="time">
-			  <use xlinkHref="img/icon/sprite.svg#icon-like"></use>
-			</svg>
-			<span className={styles['track__time-text']}>4:44</span>
-		 </div>
-	  </div>
-	</div>
-	<div className={styles['playlist__item']}>
-	  <div className={styles['playlist__track']}>
-		 <div className={styles['track__title']}>
-			{position === 7 ? (
-			  <div className={styles[`${pulsation}`]}></div>
-			) : (
-			  ' '
-			)}
-			<div className={styles['track__title-image']}>
-			  <svg className={styles['track__title-svg']}>
-				 <use xlinkHref="img/icon/sprite.svg#icon-note"></use>
-			  </svg>
-			</div>
-			<div className={styles['track__title-text']}>
-			  <NavLink
-				 className={styles['track__title-link']}
-				 style={{ color: theme.color }}
-				 to="/main"
-			  >
-				 {range === 0
-					? tracks[originalRange[7]].name
-					: tracks[shuffledRange[7]].name}
-				 <span
-					className={styles['track__title-span']}
-					style={{ color: theme.trackSpan }}
-				 ></span>
-			  </NavLink>
-			</div>
-		 </div>
-		 <div className={styles['track__author']}>
-			<NavLink
-			  className={styles['track__author-link']}
-			  style={{ color: theme.color }}
-			  to="/main"
-			>
-			  {range === 0
-				 ? tracks[originalRange[7]].author
-				 : tracks[shuffledRange[7]].author}
-			</NavLink>
-		 </div>
-		 <div className={styles['track__album']}>
-			<a className={styles['track__album-link']}>
-			  {range === 0
-				 ? tracks[originalRange[7]].album
-				 : tracks[shuffledRange[7]].album}
-			</a>
-		 </div>
-		 <div className={styles['track__time']}>
-			<svg className={styles['track__time-svg']} alt="time">
-			  <use xlinkHref="img/icon/sprite.svg#icon-like"></use>
-			</svg>
-			<span className={styles['track__time-text']}>4:44</span>
-		 </div>
-	  </div>
-	</div>
-	<div className={styles['playlist__item']}>
-	  <div className={styles['playlist__track']}>
-		 <div className={styles['track__title']}>
-			{position === 8 ? (
-			  <div className={styles[`${pulsation}`]}></div>
-			) : (
-			  ' '
-			)}
-			<div className={styles['track__title-image']}>
-			  <svg className={styles['track__title-svg']}>
-				 <use xlinkHref="img/icon/sprite.svg#icon-note"></use>
-			  </svg>
-			</div>
-			<div className={styles['track__title-text']}>
-			  <NavLink
-				 className={styles['track__title-link']}
-				 style={{ color: theme.color }}
-				 to="/main"
-			  >
-				 {range === 0
-					? tracks[originalRange[8]].name
-					: tracks[shuffledRange[8]].name}
-				 <span
-					className={styles['track__title-span']}
-					style={{ color: theme.trackSpan }}
-				 ></span>
-			  </NavLink>
-			</div>
-		 </div>
-		 <div className={styles['track__author']}>
-			<NavLink
-			  className={styles['track__author-link']}
-			  style={{ color: theme.color }}
-			  to="/main"
-			>
-			  {range === 0
-				 ? tracks[originalRange[8]].author
-				 : tracks[shuffledRange[8]].author}
-			</NavLink>
-		 </div>
-		 <div className={styles['track__album']}>
-			<a className={styles['track__album-link']}>
-			  {range === 0
-				 ? tracks[originalRange[8]].album
-				 : tracks[shuffledRange[8]].album}
-			</a>
-		 </div>
-		 <div className={styles['track__time']}>
-			<svg className={styles['track__time-svg']} alt="time">
-			  <use xlinkHref="img/icon/sprite.svg#icon-like"></use>
-			</svg>
-			<span className={styles['track__time-text']}>4:44</span>
-		 </div>
-	  </div>
-	</div>
-	<div className={styles['playlist__item']}>
-	  <div className={styles['playlist__track']}>
-		 <div className={styles['track__title']}>
-			{position === 9 ? (
-			  <div className={styles[`${pulsation}`]}></div>
-			) : (
-			  ' '
-			)}
-			<div className={styles['track__title-image']}>
-			  <svg className={styles['track__title-svg']}>
-				 <use xlinkHref="img/icon/sprite.svg#icon-note"></use>
-			  </svg>
-			</div>
-			<div className={styles['track__title-text']}>
-			  <NavLink
-				 className={styles['track__title-link']}
-				 style={{ color: theme.color }}
-				 to="/main"
-			  >
-				 {range === 0
-					? tracks[originalRange[9]].name
-					: tracks[shuffledRange[9]].name}
-				 <span
-					className={styles['track__title-span']}
-					style={{ color: theme.trackSpan }}
-				 ></span>
-			  </NavLink>
-			</div>
-		 </div>
-		 <div className={styles['track__author']}>
-			<NavLink
-			  className={styles['track__author-link']}
-			  style={{ color: theme.color }}
-			  to="/main"
-			>
-			  {range === 0
-				 ? tracks[originalRange[9]].author
-				 : tracks[shuffledRange[9]].author}
-			</NavLink>
-		 </div>
-		 <div className={styles['track__album']}>
-			<a className={styles['track__album-link']}>
-			  {range === 0
-				 ? tracks[originalRange[9]].album
-				 : tracks[shuffledRange[9]].album}
-			</a>
-		 </div>
-		 <div className={styles['track__time']}>
-			<svg className={styles['track__time-svg']} alt="time">
-			  <use xlinkHref="img/icon/sprite.svg#icon-like"></use>
-			</svg>
-			<span className={styles['track__time-text']}>4:44</span>
-		 </div>
-	  </div>
-	</div>
-	<div className={styles['playlist__item']}>
-	  <div className={styles['playlist__track']}>
-		 <div className={styles['track__title']}>
-			{position === 10 ? (
-			  <div className={styles[`${pulsation}`]}></div>
-			) : (
-			  ' '
-			)}
-			<div className={styles['track__title-image']}>
-			  <svg className={styles['track__title-svg']}>
-				 <use xlinkHref="img/icon/sprite.svg#icon-note"></use>
-			  </svg>
-			</div>
-			<div className={styles['track__title-text']}>
-			  <NavLink
-				 className={styles['track__title-link']}
-				 style={{ color: theme.color }}
-				 to="/main"
-			  >
-				 {range === 0
-					? tracks[originalRange[10]].name
-					: tracks[shuffledRange[10]].name}
-				 <span
-					className={styles['track__title-span']}
-					style={{ color: theme.trackSpan }}
-				 ></span>
-			  </NavLink>
-			</div>
-		 </div>
-		 <div className={styles['track__author']}>
-			<NavLink
-			  className={styles['track__author-link']}
-			  style={{ color: theme.color }}
-			  to="/main"
-			>
-			  {range === 0
-				 ? tracks[originalRange[10]].author
-				 : tracks[shuffledRange[10]].author}
-			</NavLink>
-		 </div>
-		 <div className={styles['track__album']}>
-			<a className={styles['track__album-link']}>
-			  {range === 0
-				 ? tracks[originalRange[10]].album
-				 : tracks[shuffledRange[10]].album}
-			</a>
-		 </div>
-		 <div className={styles['track__time']}>
-			<svg className={styles['track__time-svg']} alt="time">
-			  <use xlinkHref="img/icon/sprite.svg#icon-like"></use>
-			</svg>
-			<span className={styles['track__time-text']}>4:44</span>
-		 </div>
-	  </div>
-	</div>
-			  </>*/
+					{allFavorites.find(
+					  (item) =>
+						 item.id === renderedTracks[shuffledRange.indexOf(track)].id
+					) !== undefined ? (
+					  <div
+						 className={styles['track__time']}
+						 onClick={(event) => {
+							dispatch(fetchGetAllFavorites(`Bearer ${tokens.access}`))
+							event.target.classList.toggle(styles['disliked'])
+							dispatch(
+							  fetchRemoveFromFavorites(
+								 tracks[shuffledRange[track]].id,
+								 `Bearer ${tokens.access}`
+							  )
+							)
+							dispatch(
+							  allFavoritesDis(renderedTracks[shuffledRange[track]].id)
+							)
+						 }}
+					  >
+						 <svg
+							className={styles['track__time-svg']}
+							width="16"
+							height="14"
+							viewBox="0 0 16 14"
+							fill="none"
+							xmlns="http://www.w3.org/2000/svg"
+						 >
+							<path
+							  d="M8.02203 12.7031C13.9025 9.20312 16.9678 3.91234 13.6132 1.47046C11.413 -0.13111 8.95392 1.14488 8.02203 1.95884H8.00052H8.00046H7.97895C7.04706 1.14488 4.58794 -0.13111 2.38775 1.47046C-0.966814 3.91234 2.09846 9.20312 7.97895 12.7031H8.00046H8.00052H8.02203Z"
+							  fill="#B672FF"
+							/>
+							<path
+							  d="M8.00046 1.95884H8.02203C8.95392 1.14488 11.413 -0.13111 13.6132 1.47046C16.9678 3.91234 13.9025 9.20312 8.02203 12.7031H8.00046M8.00052 1.95884H7.97895C7.04706 1.14488 4.58794 -0.13111 2.38775 1.47046C-0.966814 3.91234 2.09846 9.20312 7.97895 12.7031H8.00052"
+							  stroke="#B672FF"
+							/>
+						 </svg>
+						 <span className={styles['track__time-text']}>4:44</span>
+					  </div>
+					) : (
+					  <div
+						 className={styles['track__time']}
+						 onClick={(event) => {
+							//dispatch(fetchGetAllFavorites(`Bearer ${tokens.access}`))
+							event.target.classList.toggle(styles['liked'])
+							dispatch(
+							  addToFavorites(
+								 renderedTracks[shuffledRange[track]].id,
+								 `Bearer ${tokens.access}`
+							  )
+							)
+							dispatch(
+							  allFavoritesLike(renderedTracks[shuffledRange[track]])
+							)
+						 }}
+					  >
+						 <svg
+							className={styles['track__time-svg']}
+							width="16"
+							height="14"
+							viewBox="0 0 16 14"
+							fill="none"
+							xmlns="http://www.w3.org/2000/svg"
+						 >
+							<path
+							  d="M8.00046 1.95884H8.02203C8.95392 1.14488 11.413 -0.13111 13.6132 1.47046C16.9678 3.91234 13.9025 9.20312 8.02203 12.7031H8.00046M8.00052 1.95884H7.97895C7.04706 1.14488 4.58794 -0.13111 2.38775 1.47046C-0.966814 3.91234 2.09846 9.20312 7.97895 12.7031H8.00052"
+							  stroke="#ACACAC"
+							/>
+						 </svg>
+						 <span className={styles['track__time-text']}>4:44</span>
+					  </div>
+					)}
+				 </div>
+			  </div>
+			))
+		 )
+	  ) 
+	  )} */

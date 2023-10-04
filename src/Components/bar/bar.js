@@ -5,36 +5,40 @@ import { useDispatch, useSelector } from 'react-redux'
 import { addToFavorites } from '../store/reducers/async'
 import { pulsationStart } from '../store/reducers/pulsationForCurrentPlayingItem'
 import { pulsationStop } from '../store/reducers/pulsationForCurrentPlayingItem'
+import { setCurrentPlay } from '../store/reducers/currentPlayingItemShowReducer'
+//import { fetchGetAllFavorites } from '../store/reducers/async'
+import { fetchRemoveFromFavorites } from '../store/reducers/async'
+import { allFavoritesLike } from '../store/reducers/favoriteTracksFromAPI'
+import { allFavoritesDis } from '../store/reducers/favoriteTracksFromAPI'
 
 function Bar(
   /*eslint-disable*/ { startPlay, setStartPlay, playProgress, setPlayProgress }
 ) {
+  const allFavorites = useSelector(
+    (state) => state.allFavoritesToolkit.initialState
+  )
+
+  const tracks = useSelector((state) => state.allTracksToolkit.initialState)
   const playRef = useRef(null)
   const progressRef = useRef(null)
   const animationRef = useRef()
   const progressInsert = useRef(null)
   const { theme } = useThemeContext()
   const dispatch = useDispatch()
+  const tokens = useSelector((state) => state.tokenReducer.defaultTokens)
+  console.log(tokens)
   const position = useSelector(
-    (state) => state.currentPlayShowReducer.currentPosition
+    (state) => state.currentPlayingToolkit.initialState
   )
   const range = useSelector((state) => state.shuffleReducer.defaultRange)
-  const currentPlayShow = () => {
-    if (position === -1) {
-      dispatch({ type: 'forward', step: 1 })
-    } else {
-      dispatch({ type: 'samePlace', step: 0 })
-    }
-  }
+  const song = allFavorites.filter(function (item) {
+    return item.id === position.id
+  })
+  console.log(song)
 
-  /*const pulsatioinStart = () => {
-    dispatch({ type: 'pulsatioinStart', step: 1 })
-  }*/
-
-  /*const pulsatioinStop = () => {
-    dispatch({ type: 'pulsationStop', step: 1 })
-  }*/
-
+  /*useEffect(() => {
+    dispatch(fetchGetAllFavorites(`Bearer ${tokens.access}`))
+  }, [])*/
   const pulsationStartLaunch = () => {
     dispatch(pulsationStart())
   }
@@ -59,9 +63,10 @@ function Bar(
       progressRef.current.style.visibility = 'hidden'
       let time = playRef.current.currentTime
       ;() => {
-        setPlayProgress(time)
+        //setPlayProgress(time)
+        setPlayProgress({ ...playProgress, playProgress: time })
       }
-      currentPlayShow()
+      //currentPlayShow()
     } else {
       stop()
       playRef.current.pause()
@@ -73,7 +78,8 @@ function Bar(
 
   useEffect(() => {
     const seconds = Math.floor(playRef.current.duration)
-    ;() => setPlayProgress(seconds)
+    //() => setPlayProgress(seconds)
+    ;() => setPlayProgress({ ...playProgress, playProgress: seconds })
   })
 
   const changeRange = () => {
@@ -85,7 +91,9 @@ function Bar(
   }
 
   const stopPlaying = () => {
-    ;() => setPlayProgress(playProgress)
+    //() => setPlayProgress(playProgress)
+    ;() => setPlayProgress({ ...playProgress, playProgress: playProgress })
+
     playRef.current.currentTime = 0
   }
 
@@ -114,31 +122,36 @@ function Bar(
     }
   }
 
-  //redux
-
-  console.log(position)
+  //console.log(position)
 
   const back = () => {
-    if (position > 0 && position <= 11) {
-      stopPlaying()
-      dispatch({ type: 'back', step: 1 })
-    } else dispatch({ type: 'default', step: 0 })
+    stopPlaying()
+    const playingItem = tracks.find((item) => item.name === position.name)
+    const count = tracks.indexOf(playingItem)
+    setCurrentPlayTrack(tracks[count - 1])
+    console.log(position)
   }
 
   const shuffle = () => {
     stopPlaying()
     if (range === 0) {
       dispatch({ type: 'shuffle', step: 1 })
-    } else dispatch({ type: 'default' })
+    } else if (range > 0) {
+      dispatch({ type: 'default' })
+    }
     console.log(range)
   }
+  const setCurrentPlayTrack = (track) => {
+    dispatch(setCurrentPlay(track))
+    console.log(position)
+  }
 
-  const forward = () => {
-    if (position >= 0 && position < 10) {
-      stopPlaying()
-      dispatch({ type: 'forward', step: 1 })
-    } else dispatch({ type: 'default', step: 0 })
-    console.log('works')
+  const forward = (position) => {
+    stopPlaying()
+    const playingItem = tracks.find((item) => item.name === position.name)
+    const count = tracks.indexOf(playingItem)
+    setCurrentPlayTrack(tracks[count + 1])
+    console.log(position)
   }
 
   return (
@@ -194,7 +207,7 @@ function Bar(
             <div
               className={styles['player__btn-next']}
               onClick={() => {
-                forward()
+                forward(position)
               }}
             >
               <svg className={styles['player__btn-next-svg']}>
@@ -221,24 +234,76 @@ function Bar(
               </div>
               <div className={styles['track-play__author']}>
                 <a className={styles['track-play__author-link']} href="http://">
-                  Ты та...
+                  {position.name}
                 </a>
               </div>
               <div className={styles['track-play__album']}>
                 <a className={styles['track-play__album-link']} href="http://">
-                  Баста
+                  {position.author}
                 </a>
               </div>
             </div>
             <div className={styles['track-play__like-dis']}>
-              <div
-                className={`${styles['track-play__like']} ${styles['_btn-icon']}`}
-                onClick={() => addToFavorites()}
-              >
-                <svg className={styles['track-play__like-svg']}>
-                  <use xlinkHref="img/icon/sprite.svg#icon-like"></use>
-                </svg>
-              </div>
+              {allFavorites.find((item) => item.id === position.id) !==
+              undefined ? (
+                <div
+                  className={`${styles['track-play__like']} ${styles['_btn-icon']}`}
+                  onClick={(event) => {
+                    /*dispatch(fetchGetAllFavorites(`Bearer ${tokens.access}`))*/
+                    event.target.classList.toggle(styles['disliked'])
+                    dispatch(
+                      fetchRemoveFromFavorites(
+                        position.id,
+                        `Bearer ${tokens.access}`
+                      )
+                    )
+                    dispatch(allFavoritesDis(position.id))
+                  }}
+                >
+                  <svg
+                    className={styles['track-play__like-svg']}
+                    width="16"
+                    height="14"
+                    viewBox="0 0 16 14"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M8.02203 12.7031C13.9025 9.20312 16.9678 3.91234 13.6132 1.47046C11.413 -0.13111 8.95392 1.14488 8.02203 1.95884H8.00052H8.00046H7.97895C7.04706 1.14488 4.58794 -0.13111 2.38775 1.47046C-0.966814 3.91234 2.09846 9.20312 7.97895 12.7031H8.00046H8.00052H8.02203Z"
+                      fill="#B672FF"
+                    />
+                    <path
+                      d="M8.00046 1.95884H8.02203C8.95392 1.14488 11.413 -0.13111 13.6132 1.47046C16.9678 3.91234 13.9025 9.20312 8.02203 12.7031H8.00046M8.00052 1.95884H7.97895C7.04706 1.14488 4.58794 -0.13111 2.38775 1.47046C-0.966814 3.91234 2.09846 9.20312 7.97895 12.7031H8.00052"
+                      stroke="#B672FF"
+                    />
+                  </svg>
+                </div>
+              ) : (
+                <div
+                  className={`${styles['track-play__like']} ${styles['_btn-icon']}`}
+                  onClick={(event) => {
+                    event.target.classList.toggle(styles['liked'])
+                    dispatch(
+                      addToFavorites(position.id, `Bearer ${tokens.access}`)
+                    )
+                    dispatch(allFavoritesLike(position))
+                  }}
+                >
+                  <svg
+                    className={styles['track-play__like-svg']}
+                    width="16"
+                    height="14"
+                    viewBox="0 0 16 14"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M8.00046 1.95884H8.02203C8.95392 1.14488 11.413 -0.13111 13.6132 1.47046C16.9678 3.91234 13.9025 9.20312 8.02203 12.7031H8.00046M8.00052 1.95884H7.97895C7.04706 1.14488 4.58794 -0.13111 2.38775 1.47046C-0.966814 3.91234 2.09846 9.20312 7.97895 12.7031H8.00052"
+                      stroke="#ACACAC"
+                    />
+                  </svg>
+                </div>
+              )}
               <div
                 className={`${styles['track-play__dislike']} ${styles['_btn-icon']}`}
               >

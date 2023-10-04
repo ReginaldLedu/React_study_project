@@ -11,11 +11,14 @@
 .liked {
   fill: #b882ff;
 }
+.disliked {
+  fill: black;
+}
 
 .main {
   flex: 1 1 auto;
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   justify-content: space-between;
 }
 

@@ -7,7 +7,7 @@ export const shuffleReducer = (state = defaultRange, action) => {
     case 'shuffle':
       return { ...state, defaultRange: state.defaultRange + 1 }
     case 'default':
-      return { ...state, defaultRange: state.defaultRange }
+      return { ...state, defaultRange: state.defaultRange - 1 }
     default:
       return state
   }

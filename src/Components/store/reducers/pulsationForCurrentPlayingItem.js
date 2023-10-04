@@ -18,4 +18,3 @@ export const pulsationSlice = createSlice({
 
 export const { pulsationStop, pulsationStart } = pulsationSlice.actions
 export default pulsationSlice.reducer
-
