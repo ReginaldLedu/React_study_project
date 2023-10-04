@@ -93,12 +93,6 @@ function FiltersShow({
   /* eslint-disable */ isActive,
   /* eslint-disable */ onShow,
 
-  /* eslint-disable  activeIndex,*/
-  /* eslint-disable  setActiveIndex,
-  /* eslint-disable  activeGenre,
-  /* eslint-disable  setActiveGenre,
-  /* eslint-disable  activeYear,
-  /* eslint-disable  setActiveYear,*/
 }) {
   const { theme } = useThemeContext()
 
