@@ -1,12 +1,9 @@
 import { allTracks } from './tracksfromapi'
-
 import { getTokenCreator } from './tokenFromAPIReducer'
-//import { refreshTokens } from './tokenFromAPIReducer'
 import { getLoginCreator } from './tokenFromAPIReducer'
 import { addToFavoritesActionCreator } from './getFavTrack'
 import { removeFromFavoritesActionCreator } from './getFavTrack'
 import { allFavoritesFromAPI } from './favoriteTracksFromAPI'
-//import { AllFavoriteTracksActionCreator } from './tracksfromapi'
 import { refresh } from './tokenFromAPIReducer'
 import { getSelectionPlaylist } from './selectionPlaylist'
 import { forEmptyTokens } from './favoriteTracksFromAPI'
@@ -21,6 +18,7 @@ export const fetchTracks = () => {
     console.log(data)
   }
 }
+
 export const fetchSelectionTracks = (id) => {
   return async function (dispatch) {
     const response = await fetch(
@@ -128,23 +126,6 @@ export function fetchGetAllFavorites(token) {
       })
   }
 }
-/*export const fetchGetAllFavorites = (token) => {
-  return async function (dispatch) {
-    const response = await fetch(
-      'https://skypro-music-api.skyeng.tech/catalog/track/favorite/all/',
-      {
-        headers: {
-          Authorization: token,
-        },
-      }
-    )
-    const data = await response.json()
-    typeof data === 'object'
-      ? dispatch(forEmptyTokens)
-      : dispatch(AllFavoriteTracksActionCreator(data))
-    console.log(data)
-  }
-}*/
 
 export function addToFavorites(id, token) {
   return function (dispatch) {

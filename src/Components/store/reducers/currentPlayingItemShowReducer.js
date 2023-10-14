@@ -10,13 +10,16 @@ export const currentPlaySlice = createSlice({
   initialState,
   reducers: {
     setCurrentPlay: (state, action) => {
-      //state.initialState = action.payload.name
       state.initialState = action.payload
     },
     setCurrentPlayStop: (state) => {
       state.initialState = 'stop'
     },
+    setDefaultPosition: (state) => {
+      state.initialState = {}
+    },
   },
 })
-export const { setCurrentPlay } = currentPlaySlice.actions
+export const { setCurrentPlayStop, setCurrentPlay, setDefaultPosition } =
+  currentPlaySlice.actions
 export default currentPlaySlice.reducer

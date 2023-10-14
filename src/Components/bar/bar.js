@@ -6,7 +6,6 @@ import { addToFavorites } from '../store/reducers/async'
 import { pulsationStart } from '../store/reducers/pulsationForCurrentPlayingItem'
 import { pulsationStop } from '../store/reducers/pulsationForCurrentPlayingItem'
 import { setCurrentPlay } from '../store/reducers/currentPlayingItemShowReducer'
-//import { fetchGetAllFavorites } from '../store/reducers/async'
 import { fetchRemoveFromFavorites } from '../store/reducers/async'
 import { allFavoritesLike } from '../store/reducers/favoriteTracksFromAPI'
 import { allFavoritesDis } from '../store/reducers/favoriteTracksFromAPI'
@@ -16,6 +15,10 @@ function Bar(
 ) {
   const allFavorites = useSelector(
     (state) => state.allFavoritesToolkit.initialState
+  )
+
+  const renderedTracks = useSelector(
+    (state) => state.renderedTracksToolkit.initialState
   )
 
   const tracks = useSelector((state) => state.allTracksToolkit.initialState)
@@ -36,9 +39,6 @@ function Bar(
   })
   console.log(song)
 
-  /*useEffect(() => {
-    dispatch(fetchGetAllFavorites(`Bearer ${tokens.access}`))
-  }, [])*/
   const pulsationStartLaunch = () => {
     dispatch(pulsationStart())
   }
@@ -51,6 +51,8 @@ function Bar(
   }
   const stop = () => {
     setStartPlay({ ...startPlay, startPlay: false })
+    dispatch(pulsationStop())
+    playRef.current.pause()
   }
 
   const play = () => {
@@ -63,10 +65,8 @@ function Bar(
       progressRef.current.style.visibility = 'hidden'
       let time = playRef.current.currentTime
       ;() => {
-        //setPlayProgress(time)
         setPlayProgress({ ...playProgress, playProgress: time })
       }
-      //currentPlayShow()
     } else {
       stop()
       playRef.current.pause()
@@ -78,9 +78,20 @@ function Bar(
 
   useEffect(() => {
     const seconds = Math.floor(playRef.current.duration)
-    //() => setPlayProgress(seconds)
     ;() => setPlayProgress({ ...playProgress, playProgress: seconds })
   })
+
+  useEffect(() => {
+    start()
+    playRef.current.play()
+    animationRef.current = requestAnimationFrame(whilePlaying)
+    pulsationStartLaunch()
+    progressRef.current.style.visibility = 'hidden'
+    let time = playRef.current.currentTime
+    ;() => {
+      setPlayProgress({ ...playProgress, playProgress: time })
+    }
+  }, [position])
 
   const changeRange = () => {
     playRef.current.currentTime = progressInsert.current.value
@@ -91,9 +102,10 @@ function Bar(
   }
 
   const stopPlaying = () => {
-    //() => setPlayProgress(playProgress)
+    setStartPlay({ ...startPlay, startPlay: false })
+    playRef.current.pause()
+    dispatch(pulsationStop())
     ;() => setPlayProgress({ ...playProgress, playProgress: playProgress })
-
     playRef.current.currentTime = 0
   }
 
@@ -109,7 +121,6 @@ function Bar(
       playRef.current.currentTime = 0
       progressInsert.current.value = playRef.current.currentTime
       changePlayerCurrentTime()
-      forward()
     }
   }
 
@@ -122,14 +133,14 @@ function Bar(
     }
   }
 
-  //console.log(position)
-
   const back = () => {
-    stopPlaying()
-    const playingItem = tracks.find((item) => item.name === position.name)
-    const count = tracks.indexOf(playingItem)
-    setCurrentPlayTrack(tracks[count - 1])
-    console.log(position)
+    const count = renderedTracks.indexOf(position)
+    console.log(renderedTracks[count + 1])
+    if (renderedTracks[count - 1]) {
+      dispatch(setCurrentPlay(renderedTracks[count - 1]))
+    } else {
+      dispatch(setCurrentPlay(renderedTracks[0]))
+    }
   }
 
   const shuffle = () => {
@@ -147,11 +158,13 @@ function Bar(
   }
 
   const forward = (position) => {
-    stopPlaying()
-    const playingItem = tracks.find((item) => item.name === position.name)
-    const count = tracks.indexOf(playingItem)
-    setCurrentPlayTrack(tracks[count + 1])
-    console.log(position)
+    const count = renderedTracks.indexOf(position)
+    console.log(renderedTracks[count + 1])
+    if (renderedTracks[count + 1]) {
+      dispatch(setCurrentPlay(renderedTracks[count + 1]))
+    } else {
+      dispatch(setCurrentPlay(renderedTracks[0]))
+    }
   }
 
   return (
@@ -195,9 +208,9 @@ function Bar(
               </svg>
             </div>
             <div className={styles['player__btn-play']} onClick={() => play()}>
-              <audio ref={playRef} src="track.mp3"></audio>
+              <audio ref={playRef} src={position.track_file}></audio>
               {startPlay.startPlay === true ? (
-                <img src="img/icon/stop.svg"></img>
+                <img src={'img/icon/stop.svg'}></img>
               ) : (
                 <svg className={styles['player__btn-play-svg']}>
                   <use xlinkHref="img/icon/sprite.svg#icon-play"></use>
@@ -249,7 +262,6 @@ function Bar(
                 <div
                   className={`${styles['track-play__like']} ${styles['_btn-icon']}`}
                   onClick={(event) => {
-                    /*dispatch(fetchGetAllFavorites(`Bearer ${tokens.access}`))*/
                     event.target.classList.toggle(styles['disliked'])
                     dispatch(
                       fetchRemoveFromFavorites(

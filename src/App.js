@@ -9,14 +9,12 @@ import { Layout } from './layout'
 import { useState } from 'react'
 import { Provider } from 'react-redux'
 import { store } from './Components/store/reducers/index'
-import { useSelector } from 'react-redux'
+
 function App() {
   const [startPlay, setStartPlay] = useState({ startPlay: false })
-  //const [playProgress, setPlayProgress] = useState(0)
+
   const [playProgress, setPlayProgress] = useState({ playProgress: 0 })
-  const position = useSelector(
-    (state) => state.currentPlayingToolkit.initialState
-  )
+
   return (
     <BrowserRouter>
       <Routes>
@@ -29,7 +27,6 @@ function App() {
                 setStartPlay={setStartPlay}
                 playProgress={playProgress}
                 setPlayProgress={setPlayProgress}
-                position={position}
               ></Layout>
             </Provider>
           }
@@ -70,7 +67,6 @@ function App() {
                   setStartPlay={setStartPlay}
                   playProgress={playProgress}
                   setPlayProgress={setPlayProgress}
-                  position={position}
                 />
               </Provider>
             }
@@ -88,18 +84,7 @@ function App() {
         />
 
         <Route path="registration" element={<Registration />} />
-        {/*<Route
-          path=""
-          element={
-            <Layout
-              startPlay={startPlay}
-              setStartPlay={setStartPlay}
-              playProgress={playProgress}
-              setPlayProgress={setPlayProgress}
-              position={position}
-            ></Layout>
-          }
-			></Route>*/}
+
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>

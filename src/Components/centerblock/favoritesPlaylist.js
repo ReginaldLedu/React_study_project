@@ -1,4 +1,5 @@
 import styles from './centerblock.module.css'
+import axios from 'axios'
 import { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useThemeContext } from '../main/main'
@@ -6,13 +7,27 @@ import { NavLink } from 'react-router-dom'
 import { fetchRemoveFromFavorites } from '../store/reducers/async'
 import { fetchGetAllFavorites } from '../store/reducers/async'
 import { setCurrentPlay } from '../store/reducers/currentPlayingItemShowReducer'
-//import { fetchRefreshTokens } from '../store/reducers/async'
-import { allFavoritesDis } from '../store/reducers/favoriteTracksFromAPI'
+
+import {
+  allFavoritesDis,
+  allFavoritesFromAPI,
+} from '../store/reducers/favoriteTracksFromAPI'
+import { defaultFilter } from '../store/reducers/performerFiltersSlice'
+import { filteredByPerformersClean } from '../store/reducers/filteredByPerformerPlaylist'
+import { filteredByGenresClean } from '../store/reducers/filteredByGenrePlaylist'
+import { genreDefaultFilter } from '../store/reducers/genreFilterSlice'
+import { renderTracks } from '../store/reducers/renderedTracks'
 
 export function PlaylistForFavorites() {
   useEffect(() => {
+    dispatch(defaultFilter())
+    dispatch(genreDefaultFilter())
+    dispatch(filteredByGenresClean())
+    dispatch(filteredByPerformersClean())
     dispatch(fetchGetAllFavorites(`Bearer ${tokens.access}`))
+    dispatch(renderTracks(allFavorites))
   }, [])
+
   const dispatch = useDispatch()
   const allFavorites = useSelector(
     (state) => state.allFavoritesToolkit.initialState
@@ -32,11 +47,22 @@ export function PlaylistForFavorites() {
   )
   const pulsation = useSelector((state) => state.pulsationToolkit.pulsation)
 
-  
   const setCurrentPlayTrack = (track) => {
     dispatch(setCurrentPlay(track))
     console.log(position)
   }
+  useEffect(() => {
+    axios
+      .get('https://skypro-music-api.skyeng.tech/catalog/track/favorite/all/', {
+        headers: {
+          Authorization: `Bearer ${tokens.access}`,
+        },
+      })
+      .then(function (response) {
+        dispatch(allFavoritesFromAPI(response.data))
+        dispatch(renderTracks(response.data))
+      })
+  }, [])
 
   return (
     <div className={styles['content__playlist']}>
@@ -49,7 +75,10 @@ export function PlaylistForFavorites() {
             <div className={styles['playlist__track']}>
               <div
                 className={styles['track__title']}
-                onClick={() => setCurrentPlayTrack(track)}
+                onClick={() => {
+                  setCurrentPlayTrack(track)
+                  dispatch(renderTracks(allFavorites))
+                }}
               >
                 {position.name === track.name ? (
                   <div className={styles[`${pulsation}`]}></div>
@@ -90,7 +119,6 @@ export function PlaylistForFavorites() {
               <div
                 className={styles['track__time']}
                 onClick={() => {
-                  
                   dispatch(
                     fetchRemoveFromFavorites(
                       track.id,
@@ -98,7 +126,6 @@ export function PlaylistForFavorites() {
                     )
                   )
                   dispatch(allFavoritesDis(track.id))
-                  
                 }}
               >
                 <svg

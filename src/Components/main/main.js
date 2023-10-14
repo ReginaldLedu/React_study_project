@@ -1,9 +1,9 @@
 import Nav from '../nav/nav_burger'
+import axios from 'axios'
 import CenterBlock from '../centerblock/centerblock'
 import SideBar from '../sidebar/sidebar'
 import { Playlist } from '../centerblock/contentPlaylist'
 import Footer from '../centerblock/footer'
-//import { Wrapper } from './wrapper'
 import { useState, useContext, useEffect } from 'react'
 import { createContext } from 'react'
 import { Provider } from 'react-redux'
@@ -12,7 +12,9 @@ import styles from '../centerblock/centerblock.module.css'
 import { Wrapper } from './wrapper'
 import { renderTracks } from '../store/reducers/renderedTracks'
 import { useSelector, useDispatch } from 'react-redux'
-//import { fetchTracks } from '../store/reducers/async'
+import { shuffled } from '../store/reducers/renderedTracks'
+import { allTracks } from '../store/reducers/tracksfromapi'
+
 
 export const themes = {
   dark: {
@@ -63,12 +65,31 @@ function Main(
   const position = useSelector(
     (state) => state.currentPlayingToolkit.initialState
   )
+  const renderedTracks = useSelector(
+    (state) => state.renderedTracksToolkit.initialState
+  )
+  const loginAndPasswordFromLocalReducer = useSelector(
+    (state) => state.loginPasswordToolkit.initialState
+  )
+  const tokens = useSelector((state) => state.tokenReducer.defaultTokens)
+  const range = useSelector((state) => state.shuffleReducer.defaultRange)
   console.log(position)
   const dispatch = useDispatch()
   const tracks = useSelector((state) => state.allTracksToolkit.initialState)
   useEffect(() => {
-    dispatch(renderTracks(tracks))
-  })
+    axios
+      .get('https://skypro-music-api.skyeng.tech/catalog/track/all/')
+      .then(function (response) {
+        dispatch(allTracks(response.data))
+        dispatch(renderTracks(response.data))
+      })
+  }, [])
+  console.log(tracks)
+
+  useEffect(() => {
+    dispatch(shuffled(renderedTracks))
+  }, [range])
+
   return (
     <>
       <ContextTheme.Provider value={{ theme, toggleTheme }}>

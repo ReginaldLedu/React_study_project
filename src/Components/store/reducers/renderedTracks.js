@@ -20,6 +20,6 @@ export const renderedTracksSlice = createSlice({
   },
 })
 
-export const { renderTracks, filteredByPerformers, getDefault, shuffled } =
+export const { renderTracks, getDefault, shuffled } =
   renderedTracksSlice.actions
 export default renderedTracksSlice.reducer

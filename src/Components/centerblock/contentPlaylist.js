@@ -5,11 +5,6 @@ import { NavLink } from 'react-router-dom'
 import { addToFavorites } from '../store/reducers/async'
 import { setCurrentPlay } from '../store/reducers/currentPlayingItemShowReducer'
 import { fetchRemoveFromFavorites } from '../store/reducers/async'
-//import { fetchGetAllFavorites } from '../store/reducers/async'
-/*import {
-  allFavoritesDis,
-  allFavoritesLike,
-} from '../store/reducers/favoriteTracksFromAPI'*/
 import { allFavoritesLike } from '../store/reducers/favoriteTracksFromAPI'
 import { allFavoritesDis } from '../store/reducers/favoriteTracksFromAPI'
 import { useEffect } from 'react'
@@ -37,22 +32,14 @@ export function Playlist() {
   )
 
   const pulsation = useSelector((state) => state.pulsationToolkit.pulsation)
-  const range = useSelector((state) => state.shuffleReducer.defaultRange)
+  //const range = useSelector((state) => state.shuffleReducer.defaultRange)
 
   const allFavorites = useSelector(
     (state) => state.allFavoritesToolkit.initialState
   )
 
-  /* function shuffle(array) {
-    array.sort(() => Math.random() - 0.5)
-  }*/
-
-  /*const originalRange = [
-    0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16,
-
-  const forShuffled = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-  shuffle(forShuffled)  ]*/
-
+  const range = useSelector((state) => state.shuffleReducer.defaultRange)
+  console.log(range)
   useEffect(() => {
     dispatch(shuffled(renderedTracks))
   }, [range])
@@ -115,7 +102,6 @@ export function Playlist() {
                 <div
                   className={styles['track__time']}
                   onClick={(event) => {
-                    //dispatch(fetchGetAllFavorites(`Bearer ${tokens.access}`))
                     event.target.classList.toggle(styles['disliked'])
                     dispatch(
                       fetchRemoveFromFavorites(
@@ -155,7 +141,6 @@ export function Playlist() {
                 <div
                   className={styles['track__time']}
                   onClick={(event) => {
-                    //dispatch(fetchGetAllFavorites(`Bearer ${tokens.access}`))
                     event.target.classList.toggle(styles['liked'])
                     dispatch(
                       addToFavorites(track.id, `Bearer ${tokens.access}`)

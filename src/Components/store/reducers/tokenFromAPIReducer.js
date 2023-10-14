@@ -1,6 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit'
 import { createSlice } from '@reduxjs/toolkit'
 
+
 export const defaultToken = {
   defaultTokens: {},
 }
@@ -39,6 +40,7 @@ export const loginStore = configureStore({ reducer: tokenReducer })
 const initialState = {
   initialState: ' ',
 }
+
 export const refreshTokenSlice = createSlice({
   name: 'refreshTokenToolkit',
   initialState,

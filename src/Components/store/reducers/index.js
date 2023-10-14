@@ -16,7 +16,7 @@ import { FilterSlice } from './performerFiltersSlice'
 import { FilteredPlaylistSlice } from './filteredByPerformerPlaylist'
 import { GenreFilterSlice } from './genreFilterSlice'
 import { FilteredByGenrePlaylistSlice } from './filteredByGenrePlaylist'
-//import { AllFavoriteTracksReducer } from './tracksfromapi'
+import { LoginPasswordSlice } from './loginPasswordtoReduxToolkit'
 
 const rootReducer = combineReducers({
   filteredByGenrePlaylisToolkit: FilteredByGenrePlaylistSlice.reducer,
@@ -31,11 +31,10 @@ const rootReducer = combineReducers({
   shuffleReducer,
   currentPlayingToolkit: currentPlaySlice.reducer,
   tokenReducer,
-  //tracksReducer,
-  //AllFavoriteTracksReducer,
   loginReducer,
   addToFavoritesReducer,
   allFavoritesToolkit: allFavoritesSlice.reducer,
+  loginPasswordToolkit: LoginPasswordSlice.reducer,
 })
 export const store = configureStore({
   reducer: rootReducer,

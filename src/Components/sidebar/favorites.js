@@ -1,4 +1,5 @@
 export default Favorites
+
 import Nav from '../nav/nav_burger'
 import CenterBlock from '../centerblock/centerblock'
 import SideBar from '../sidebar/sidebar'
@@ -65,12 +66,7 @@ function Favorites(
           <Wrapper>
             <div className="container">
               <main className="main">
-                <Nav
-                /*startPlay={startPlay}
-                  setStartPlay={setStartPlay}
-                  playProgress={playProgress}
-                  setPlayProgress={setPlayProgress}*/
-                />
+                <Nav />
                 <div className={styles['main__centerblock']}>
                   <Provider store={store}>
                     <CenterBlock />

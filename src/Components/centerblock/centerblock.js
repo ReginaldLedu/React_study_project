@@ -5,7 +5,14 @@ import { useSelector, useDispatch } from 'react-redux'
 import { useRef } from 'react'
 import { renderTracks } from '../store/reducers/renderedTracks'
 
-function CenterBlock() {
+function CenterBlock(
+  activeIndex,
+  setActiveIndex,
+  activeGenre,
+  setActiveGenre,
+  activeYear,
+  setActiveYear
+) {
   const dispatch = useDispatch()
   const tracks = useSelector((state) => state.allTracksToolkit.initialState)
   const { theme } = useThemeContext()
@@ -59,7 +66,14 @@ function CenterBlock() {
       <h2 className={styles['centerblock__h2']} style={{ color: theme.color }}>
         Треки
       </h2>
-      <Filter />
+      <Filter
+        activeIndex={activeIndex}
+        setActiveIndex={setActiveIndex}
+        activeGenre={activeGenre}
+        setActiveGenre={setActiveGenre}
+        activeYear={activeYear}
+        setActiveYear={setActiveYear}
+      />
       <div className={styles['centerblock__content']}>
         <div
           className={`${styles['content__title']} ${styles['playlist__title']}`}

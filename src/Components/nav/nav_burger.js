@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import MenuNav from './menuNav'
+import { NavLink } from 'react-router-dom'
 import styles from './navBurger.module.css'
 import { useThemeContext } from '../main/main'
 
@@ -19,13 +20,15 @@ export const Nav = (
       className={styles['main__nav']}
       style={{ background: theme.navBackground }}
     >
-      <div className={styles['nav__logo']}>
-        <img
-          className={styles['logo__image']}
-          src="img/logo.png"
-          alt="logo"
-        ></img>
-      </div>
+      <NavLink to="/main">
+        <div className={styles['nav__logo']}>
+          <img
+            className={styles['logo__image']}
+            src="img/logo.png"
+            alt="logo"
+          ></img>
+        </div>
+      </NavLink>
       <div className={styles['nav__burger']} onClick={toggleVisibility}>
         <span
           className={styles['burger__line']}

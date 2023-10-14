@@ -1,4 +1,5 @@
 import { useParams } from 'react-router-dom'
+import axios from 'axios'
 import { trackLists } from './tracks.js'
 import Nav from '../nav/nav_burger'
 import { Wrapper } from '../main/wrapper'
@@ -12,10 +13,11 @@ import { store } from '../store/reducers/index'
 import { PlaylistForSelected } from '../centerblock/selectedPlaylist.js'
 import styles from '../centerblock/centerblock.module.css'
 import { useSelector, useDispatch } from 'react-redux'
-import { fetchSelectionTracks } from '../store/reducers/async.js'
 import { renderTracks } from '../store/reducers/renderedTracks.js'
 import { fetchTracks } from '../store/reducers/async.js'
-
+import { defaultFilter } from '../store/reducers/performerFiltersSlice.js'
+import { filteredByPerformersClean } from '../store/reducers/filteredByPerformerPlaylist.js'
+import { getSelectionPlaylist } from '../store/reducers/selectionPlaylist.js'
 export const themes = {
   dark: {
     background: 'black',
@@ -57,15 +59,36 @@ function TracklistChosen(/*eslint-disable*/ { startPlay, setStartPlay }) {
   const selectionPlaylistTracks = useSelector(
     (state) => state.selectionPlaylistToolkit.initialState
   )
+
   console.log(selectionPlaylistTracks)
   const trackList = trackLists.find((tracklist) => tracklist.id === params.id)
   console.log(trackList)
   useEffect(() => {
     dispatch(fetchTracks())
+    dispatch(defaultFilter())
+    dispatch(filteredByPerformersClean())
   }, [])
+
   useEffect(() => {
-    dispatch(fetchSelectionTracks(trackList.id))
-    dispatch(renderTracks(selectionPlaylistTracks))
+    axios
+      .get(
+        `https://skypro-music-api.skyeng.tech/catalog/selection/${trackList.id}/`
+      )
+      .then(function (response) {
+        dispatch(renderTracks(response.data.items))
+        dispatch(getSelectionPlaylist(response.data.items))
+      })
+  }, [])
+
+  useEffect(() => {
+    axios
+      .get(
+        `https://skypro-music-api.skyeng.tech/catalog/selection/${trackList.id}/`
+      )
+      .then(function (response) {
+        dispatch(renderTracks(response.data.items))
+        dispatch(getSelectionPlaylist(response.data.items))
+      })
   }, [trackList.id])
 
   const [theme, setLighTheme] = useState(themes.dark)

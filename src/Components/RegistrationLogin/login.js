@@ -2,12 +2,11 @@ import { useNavigate } from 'react-router-dom'
 import styles from './login.module.css'
 import { useState, useRef, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
-import {} from 'react'
-import { fetchLogin, fetchaAccessToken } from '../store/reducers/async'
 
+import { fetchLogin, fetchaAccessToken } from '../store/reducers/async'
+import { loginAndPasswordAddToReducer } from '../store/reducers/loginPasswordtoReduxToolkit'
 
 export default function Login() {
-  
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const [loginChange, setLoginChange] = useState(null)
@@ -34,13 +33,12 @@ export default function Login() {
         break
     }
   }
-  const logPassObject = {}
+
   async function log(loginChange, passwordChange) {
-    logPassObject.log = loginChange
-    logPassObject.pass = passwordChange
     dispatch(fetchLogin(loginChange, passwordChange))
     dispatch(fetchaAccessToken(loginChange, passwordChange))
-   
+    dispatch(loginAndPasswordAddToReducer(loginChange))
+    dispatch(loginAndPasswordAddToReducer(passwordChange))
   }
 
   return (
