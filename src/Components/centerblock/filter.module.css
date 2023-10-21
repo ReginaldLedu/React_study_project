@@ -8,6 +8,17 @@
   font-weight: 400;
 }
 
+.chosen {
+  text-align: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background-color: #ad61ff;
+  position: absolute;
+  top: -20px;
+  left: 10px;
+}
+
 .centerblock__filter {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -57,12 +68,28 @@
   background-color: rgba(49, 49, 49, 1);
 }
 
+.filter__pop-up-year > label {
+  color: #ffffff;
+  font-family: 'StratosSkyeng', sans-serif;
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 24px;
+  letter-spacing: 0em;
+  text-align: left;
+  margin-left: 5px;
+}
+
+.filter__pop-up-year > label:hover {
+  color: #d9b6ff;
+  cursor: pointer;
+}
 #old {
   color: #313131;
   width: 18px;
   height: 18px;
   border: 1px solid white;
   margin-left: 10px;
+  color: #ffffff;
 }
 
 #new {
@@ -72,33 +99,63 @@
   border: 1px solid white;
   margin-left: 10px;
 }
-
-.filter__pop-up {
+.filter__pop-up_wrapper {
   height: 305px;
   width: 248px;
   border-radius: 12px;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-box-align: start;
-  -ms-flex-align: start;
-  align-items: flex-start;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  justify-content: center;
-  padding: 34px;
-  gap: 10px;
-  background: #313131;
+  background-color: #4b4949;
   z-index: 20;
   position: absolute;
   top: 49px;
   left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.filter__pop-up {
+  height: 237px;
+  width: 180px;
+  background-color: #4b4949;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  /*display: flex;*/
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  /*-ms-flex-direction: column;*/
+  /*flex-direction: column;*/
+  -webkit-box-align: start;
+  -ms-flex-align: start;
+  /*align-items: flex-start;*/
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  /*justify-content: center;*/
+
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+.filter__pop-up::-webkit-scrollbar {
+  width: 4px;
+  background: #4b4949;
+}
+.filter__pop-up::-webkit-scrollbar-thumb {
+  background-color: white;
 }
 
+.filter__pop-up > p {
+  color: #ffffff;
+  font-family: 'StratosSkyeng', sans-serif;
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 24px;
+  letter-spacing: 0em;
+  text-align: left;
+  margin-bottom: 15px;
+}
+
+.filter__pop-up > p:hover {
+  color: #d9b6ff;
+  cursor: pointer;
+}
 .pop-up__item {
   color: #ffffff;
   font-family: 'StratosSkyeng', sans-serif;

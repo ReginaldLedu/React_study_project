@@ -1,13 +1,19 @@
 import { useNavigate } from 'react-router-dom'
 import styles from './login.module.css'
-import { useState } from 'react'
-import { useEffect } from 'react'
+import { useState, useRef, useEffect } from 'react'
+import { useDispatch } from 'react-redux'
 
-function Login() {
+import { fetchLogin, fetchaAccessToken } from '../store/reducers/async'
+import { loginAndPasswordAddToReducer } from '../store/reducers/loginPasswordtoReduxToolkit'
+
+export default function Login() {
+  const dispatch = useDispatch()
   const navigate = useNavigate()
-  const [loginChange, setLoginChange] = useState(false)
-  const [passwordChange, setPasswordChange] = useState(false)
+  const [loginChange, setLoginChange] = useState(null)
+  const [passwordChange, setPasswordChange] = useState(null)
   const [formValid, setFormValid] = useState(false)
+  const logRef = useRef()
+  const passRef = useRef()
 
   useEffect(() => {
     if (loginChange && passwordChange) {
@@ -20,12 +26,19 @@ function Login() {
   const blurHandler = (event) => {
     switch (event.target.name) {
       case 'login':
-        setLoginChange(true)
+        setLoginChange(logRef.current.value)
         break
       case 'password':
-        setPasswordChange(true)
+        setPasswordChange(passRef.current.value)
         break
     }
+  }
+
+  async function log(loginChange, passwordChange) {
+    dispatch(fetchLogin(loginChange, passwordChange))
+    dispatch(fetchaAccessToken(loginChange, passwordChange))
+    dispatch(loginAndPasswordAddToReducer(loginChange))
+    dispatch(loginAndPasswordAddToReducer(passwordChange))
   }
 
   return (
@@ -34,33 +47,40 @@ function Login() {
         <img src="sky.svg"></img>
       </div>
       <input
+        ref={logRef}
         name="login"
         type="text"
         className={styles['login__name']}
         placeholder="Логин"
-        onBlur={(event) => blurHandler(event)}
+        onChange={(event) => blurHandler(event)}
       ></input>
       <input
+        ref={passRef}
         name="password"
         type="text"
         className={styles['login__password']}
         placeholder="Пароль"
-        onBlur={(event) => blurHandler(event)}
+        onChange={(event) => blurHandler(event)}
       ></input>
       <button
         className={styles['login__button']}
         disabled={!formValid}
-        onClick={() => navigate('main', { replace: false })}
+        onClick={() => {
+          log(loginChange, passwordChange).then(
+            navigate('main', { replace: false })
+          )
+        }}
       >
         Войти
       </button>
       <button
         className={styles['registration__start']}
-        onClick={() => navigate('registration', { replace: false })}
+        onClick={() => {
+          navigate('registration', { replace: false })
+        }}
       >
         Зарегистрироваться
       </button>
     </div>
   )
 }
-export default Login
